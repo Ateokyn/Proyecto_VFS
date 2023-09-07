@@ -1,12 +1,12 @@
 {
-  "name": "backend_vfs",
+  "name": "proyecto_vfs",
   "version": "1.0.0",
-  "description": "Esta es una aplicacion web para negocio de venta.",
+  "description": "Aplicacion web para gestion de compra y cita de una salon de belleza.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Kenny Tellez - Gisela Rocha",
+  "author": "Gisela Paola - Kenny Tellez",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

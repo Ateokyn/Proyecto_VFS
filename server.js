@@ -8,7 +8,7 @@ const port = 5000;
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '@kekodroid',
+    password: 'vikingo2030',
     database: 'vfs'
 
 });
@@ -27,3 +27,7 @@ app.listen(port,()=>{
     console.log(`Servidor backend en funcionamiento en el puerto ${port}`);
 
 });
+
+const crudRoutes = require('./routes/crudRoutes.js')(db);
+app.use('/crud', crudRoutes);
+
