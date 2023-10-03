@@ -5,11 +5,14 @@ const cors = require('cors');
 const app = express();
 const port = 5000;
 
+// Middleware para analizar el cuerpo de la solicitud en formato JSON
+app.use(express.json());
+
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: 'vikingo2030',
-    database: 'vfs'
+    password: '@kekodroid',
+    database: 'database_vfs'
 
 });
 
