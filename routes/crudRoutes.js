@@ -2,10 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 module.exports = (db) => {
+
+  /* Crud Cliente Inicio */
+
   // Ruta para leer registros
   router.get('/read', (req, res) => {
     // Utiliza la instancia de la base de datos pasada como parámetro
-    // Realizar una consulta SQL para seleccionar todos los registros
     const sql = 'SELECT * FROM Cliente';
 
     // Ejecutar la consulta
@@ -23,16 +25,16 @@ module.exports = (db) => {
   // Ruta para crear un nuevo registro con ID específico
   router.post('/create', (req, res) => {
     // Recibe los datos del nuevo registro desde el cuerpo de la solicitud (req.body)
-    const { nombre_cliente1,  nombre_cliente2, apellido_cliente1, apellido_cliente2, fechanac_cliente1, telefono_cliente, email_cliente, contrasena_cliente } = req.body;
+    const { nombre1_cliente,  nombre2_cliente, apellido1_cliente, apellido2_cliente, fechanac_cliente, telefono_cliente, email_cliente, contrasena_cliente } = req.body;
 
     // Verifica si se proporcionaron los datos necesarios
-    if (!nombre_cliente1 || !nombre_cliente2 || !apellido_cliente1 || !apellido_cliente2 || !fechanac_cliente1 || !telefono_cliente || !email_cliente || !contrasena_cliente) {
+    if (!nombre1_cliente || !nombre2_cliente || !apellido1_cliente || !apellido2_cliente || !fechanac_cliente || !telefono_cliente || !email_cliente || !contrasena_cliente) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
 
     // Realiza la consulta SQL para insertar un nuevo registro con ID específico
-    const sql = `INSERT INTO Cliente (nombre_cliente1, nombre_cliente2, apellido_cliente1, apellido_cliente2, fechanac_cliente, telefono_cliente, email_cliente, contrasena_cliente) VALUES (?, ?, ?, ?, ?)`;
-    const values = [nombre_cliente1,  nombre_cliente2, apellido_cliente1, apellido_cliente2, fechanac_cliente1, telefono_cliente, email_cliente, contrasena_cliente];
+    const sql = `INSERT INTO Cliente (nombre1_cliente, nombre2_cliente, apellido1_cliente, apellido2_cliente, fechanac_cliente, telefono_cliente, email_cliente, contrasena_cliente) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const values = [nombre1_cliente,  nombre2_cliente, apellido1_cliente, apellido2_cliente, fechanac_cliente, telefono_cliente, email_cliente, contrasena_cliente];
 
     // Ejecuta la consulta
     db.query(sql, values, (err, result) => {
@@ -47,26 +49,26 @@ module.exports = (db) => {
   });
 
     // Ruta para actualizar un registro existente por ID
-  router.put('/update/:id', (req, res) => {
+  router.put('/update/:id_cliente', (req, res) => {
     // Obtén el ID del registro a actualizar desde los parámetros de la URL
-    const id = req.params.id;
+    const id_cliente = req.params.id_cliente;
 
     // Recibe los datos actualizados desde el cuerpo de la solicitud (req.body)
-    const { name, countrycode, district, population } = req.body;
+    const { nombre1_cliente,  nombre2_cliente, apellido1_cliente, apellido2_cliente, fechanac_cliente, telefono_cliente, email_cliente, contrasena_cliente } = req.body;
 
     // Verifica si se proporcionaron los datos necesarios
-    if (!name || !countrycode || !district || !population) {
+    if (!nombre1_cliente || !nombre2_cliente || !apellido1_cliente || !apellido2_cliente || !fechanac_cliente || !telefono_cliente || !email_cliente || !contrasena_cliente) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
 
     // Realiza la consulta SQL para actualizar el registro por ID
     const sql = `
-      UPDATE city
-      SET Name = ?, CountryCode = ?, District = ?, Population = ?
-      WHERE ID = ?
+      UPDATE Cliente
+      SET nombre1_cliente = ?, nombre2_cliente = ?, apellido1_cliente = ?, apellido2_cliente = ?, fechanac_cliente = ?, telefono_cliente = ?, email_cliente = ?, contrasena_cliente = ?
+      WHERE id_cliente = ?
     `;
 
-    const values = [name, countrycode, district, population, id];
+    const values = [nombre1_cliente,  nombre2_cliente, apellido1_cliente, apellido2_cliente, fechanac_cliente, telefono_cliente, email_cliente, contrasena_cliente, id_cliente];
 
     // Ejecuta la consulta
     db.query(sql, values, (err, result) => {
@@ -81,15 +83,15 @@ module.exports = (db) => {
   });
 
   // Ruta para eliminar un registro existente por ID
-  router.delete('/delete/:id', (req, res) => {
+  router.delete('/delete/:id_cliente', (req, res) => {
     // Obtén el ID del registro a eliminar desde los parámetros de la URL
-    const id = req.params.id;
+    const id_cliente = req.params.id_cliente;
 
     // Realiza la consulta SQL para eliminar el registro por ID
-    const sql = 'DELETE FROM city WHERE ID = ?';
+    const sql = 'DELETE FROM Cliente WHERE id_cliente = ?';
 
     // Ejecuta la consulta
-    db.query(sql, [id], (err, result) => {
+    db.query(sql, [id_cliente], (err, result) => {
       if (err) {
         console.error('Error al eliminar el registro:', err);
         res.status(500).json({ error: 'Error al eliminar el registro' });
@@ -100,34 +102,7 @@ module.exports = (db) => {
     });
   });
 
-  //Agregar rutas al archivo crudRouter dentro de module.exports
-
-  // Ruta para crear un nuevo registro con ID específico
-  router.post('/create', (req, res) => {
-    // Recibe los datos del nuevo registro desde el cuerpo de la solicitud (req.body)
-    const { id, name, countrycode, district, population } = req.body;
-
-    // Verifica si se proporcionaron los datos necesarios
-    if (!id || !name || !countrycode || !district || !population) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-    }
-
-    // Realiza la consulta SQL para insertar un nuevo registro con ID específico
-    const sql = `INSERT INTO city (ID, Name, CountryCode, District, Population) VALUES (?, ?, ?, ?, ?)`;
-    const values = [id, name, countrycode, district, population];
-
-    // Ejecuta la consulta
-    db.query(sql, values, (err, result) => {
-      if (err) {
-        console.error('Error al insertar registro:', err);
-        res.status(500).json({ error: 'Error al insertar registro' });
-      } else {
-        // Devuelve el ID del nuevo registro como respuesta
-        res.status(201).json({ id });
-      }
-    });
-  });
-
+  /* Crud Cliente Fin */
   return router;
 };
 
