@@ -1,0 +1,20 @@
+.navbar-color {
+    background-color: #0e3ad8; /* Color de fondo personalizado */
+  }
+  
+  .link-unstyled {
+    text-decoration: none; /* Elimina el subrayado */
+    color: inherit; /* Usa el color heredado (generalmente, el color predeterminado) */
+  }
+  
+  .center-button {
+    text-align: center;
+  }
+  
+.title {
+  font-size: 36px; /* Tamaño de fuente */
+  color: #ff3366; /* Color del texto */
+  text-align: center; /* Alineación centrada */
+  margin-bottom: 20px; /* Margen inferior para separar del contenido */
+  /* Agrega más estilos según tus preferencias */
+}
