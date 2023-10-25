@@ -48,6 +48,36 @@ function Header() {
                 </NavDropdown.Item>
               </NavDropdown>
 
+              <NavDropdown title="Categorias" id="categorias">
+                <NavDropdown.Item>
+                  <Link to="/Categoria" className="link-unstyled">Registrar Categoria</Link>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item>
+                  <Link to="/ListaCategorias" className="link-unstyled">Listar Categoria</Link>
+                </NavDropdown.Item>
+              </NavDropdown>
+
+              <NavDropdown title="Proveedores" id="proveedores">
+                <NavDropdown.Item>
+                  <Link to="/Proveedor" className="link-unstyled">Registrar Proveedor</Link>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item>
+                  <Link to="/ListaProveedores" className="link-unstyled">Listar Proveedores</Link>
+                </NavDropdown.Item>
+              </NavDropdown>
+
+              <NavDropdown title="Productos" id="productos">
+                <NavDropdown.Item>
+                  <Link to="/Producto" className="link-unstyled">Registrar Producto</Link>
+                </NavDropdown.Item>
+
+                <NavDropdown.Item>
+                  <Link to="/ListaProductos" className="link-unstyled">Listar Productos</Link>
+                </NavDropdown.Item>
+              </NavDropdown>
+
             </Nav>
           </Navbar.Collapse>
           <Button
@@ -90,6 +120,36 @@ function Header() {
 
               <NavDropdown.Item>
                 <Link to="/ListaEmpleados" className="link-unstyled">Listar Empleado</Link>
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            <NavDropdown title="Categorias" id="categorias">
+              <NavDropdown.Item>
+                <Link to="/Categoria" className="link-unstyled">Registrar Categoria</Link>
+              </NavDropdown.Item>
+
+              <NavDropdown.Item>
+                <Link to="/ListaCategorias" className="link-unstyled">Listar Categoria</Link>
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            <NavDropdown title="Proveedores" id="proveedores">
+              <NavDropdown.Item>
+                <Link to="/Proveedor" className="link-unstyled">Registrar Proveedor</Link>
+              </NavDropdown.Item>
+
+              <NavDropdown.Item>
+                <Link to="/ListaProveedores" className="link-unstyled">Listar Proveedores</Link>
+              </NavDropdown.Item>
+            </NavDropdown>
+
+            <NavDropdown title="Productos" id="productos">
+              <NavDropdown.Item>
+                <Link to="/Producto" className="link-unstyled">Registrar Producto</Link>
+              </NavDropdown.Item>
+
+              <NavDropdown.Item>
+                <Link to="/ListaProductos" className="link-unstyled">Listar Productos</Link>
               </NavDropdown.Item>
             </NavDropdown>
 

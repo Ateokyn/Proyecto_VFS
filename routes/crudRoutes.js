@@ -182,46 +182,30 @@ module.exports = (db) => {
   /* Crud Producto Inicio */
 
   // Leer
-router.get('/read_producto', (req, res) => {
-  const sql = `
-      SELECT 
-          p.id_producto,
-          p.nombre_producto,
-          p.foto_descriptiva,
-          p.precio_venta,
-          p.precio_compra,
-          p.cantidad,
-          pr.empresa_proveedor,
-          c.nombre_categoria,
-          p.talla,
-          p.descripcion,
-          p.genero
-      FROM Producto p
-      INNER JOIN Proveedor pr ON p.id_proveedor = pr.id_proveedor
-      INNER JOIN Categoria c ON p.id_categoria = c.id_categoria;
-  `;
+  router.get('/read_producto', (req, res) => {
 
-  // Ejecutar la consulta
-  db.query(sql, (err, result) => {
+    const sql = 'SELECT * FROM Producto';
+
+    // Ejecutar la consulta
+    db.query(sql, (err, result) => {
       if (err) {
-          console.error('Error al leer registros:', err);
-          res.status(500).json({ error: 'Error al leer registros' });
+        console.error('Error al leer registros:', err);
+        res.status(500).json({ error: 'Error al leer registros' });
       } else {
-          res.status(200).json(result);
+        res.status(200).json(result);
       }
+    });
   });
-});
-
 
   // Crear
   router.post('/create_producto', (req, res) => {
     const { id_proveedor, id_categoria, nombre_producto, foto_descriptiva, precio_venta, precio_compra, cantidad, talla, descripcion, genero } = req.body;
 
-    if (!nombre_producto || !precio_venta || !precio_compra || !cantidad || !talla || !descripcion || !genero) {
+    if (!id_proveedor || !id_categoria || !nombre_producto || !precio_venta || !precio_compra || !cantidad || !talla || !descripcion || !genero) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
 
-      const sql = `INSERT INTO Producto (id_proveedor, id_categoria, nombre_producto, foto_descriptiva, precio_venta, precio_compra, cantidad, talla, descripcion, genero) VALUES (?,?,?,?,?,?,?,?,?,?)`;
+      const sql = `INSERT INTO Producto (id_proveedor, id_categoria, nombre_producto, foto_descriptiva, precio_venta, precio_compra, cantidad, talla, descripcion, genero) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       const values = [id_proveedor, id_categoria, nombre_producto, foto_descriptiva, precio_venta, precio_compra, cantidad, talla, descripcion, genero];
 
       // Ejecuta la consulta
@@ -776,7 +760,7 @@ router.get('/read_producto', (req, res) => {
       const sql = `
         UPDATE Detalle_compra
         SET id_compra = ?, id_producto = ?, cantidad_compra = ?
-        WHERE id_detalle_c = ?
+        WHERE id_detalle_c  = ?
       `;
 
       const values = [id_compra, id_producto, cantidad_compra, id_detalle_compra];

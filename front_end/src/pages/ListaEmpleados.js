@@ -115,15 +115,16 @@ function ListaEmpleado() {
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Segundo Nombre</th>
-                <th>Apellidos</th>
-                <th>Segundo Apellidos</th>
+              <th abbr="Id">Id</th>
+                <th>Primer nombre</th>
+                <th>Segundo nombre</th>
+                <th>Primer apellidos</th>
+                <th>Segundo apellidos</th>
                 <th>Especialidad</th>
                 <th>Telefono</th>
                 <th>Email</th>
                 <th>Contraseña</th>
+                <th>Acción</th>
               </tr>
             </thead>
             <tbody>

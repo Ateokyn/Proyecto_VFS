@@ -1,4 +1,6 @@
 ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY '@kekodroid';
+ALTER USER 'KennyTellez'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'incorrecto';
+ALTER USER 'GiselaPaola'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'correcto';
 
 CREATE DATABASE database_vfs;
 USE database_vfs;

@@ -29,7 +29,7 @@ function ListaCliente() {
       nombre2_cliente: clientes.nombre2_cliente,
       apellido1_cliente: clientes.apellido1_cliente,
       apellido2_cliente: clientes.apellido2_cliente,
-      fechanac_cliente: clientes.fechanac_cliente,
+      fechanac_cliente: formattedFechanac_cliente,
       telefono_cliente: clientes.telefono_cliente,
       email_cliente: clientes.email_cliente,
       contrasena_cliente: clientes.contrasena_cliente,
@@ -118,15 +118,16 @@ function ListaCliente() {
           <Table striped bordered hover>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Nombre</th>
+              <th abbr="Id">Id</th>
+                <th>Primer nombre</th>
                 <th>Segundo nombre</th>
-                <th>Apellido</th>
+                <th>Primer apellido</th>
                 <th>Segundo apellido</th>
                 <th>Fecha de Nacimiento</th>
                 <th>Telefono</th>
                 <th>Email</th>
                 <th>Contraseña</th>
+                <th>Acción</th>
               </tr>
             </thead>
             <tbody>

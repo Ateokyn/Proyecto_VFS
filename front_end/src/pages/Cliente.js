@@ -21,14 +21,14 @@ function Cliente() {
 
     // Crear un objeto con los datos del formulario
     const formData = {
-  nombre1_cliente,
-  nombre2_cliente,
-  apellido1_cliente,
-  apellido2_cliente,
-  fechanac_cliente,
-  telefono_cliente,
-  email_cliente,
-  contrasena_cliente,
+      nombre1_cliente,
+      nombre2_cliente,
+      apellido1_cliente,
+      apellido2_cliente,
+      fechanac_cliente,
+      telefono_cliente,
+      email_cliente,
+      contrasena_cliente,
     };
 
     try {
@@ -62,10 +62,10 @@ function Cliente() {
     }
   };
 
-  return(
+  return (
     <div>
       <Header />
-      
+
       <Container>
         <Card className="mt-3">
           <Card.Body>
@@ -130,31 +130,31 @@ function Cliente() {
 
                 <Col sm="12" md="6" lg="6">
                   <FloatingLabel controlId="telefono_cliente" label="Telefono">
-                    <Form.Control 
-                      type="number" 
+                    <Form.Control
+                      type="number"
                       placeholder="Ingrese el numero de telefono"
                       value={telefono_cliente}
-                      onChange={(e) => setTelefono_cliente(e.target.value)} 
+                      onChange={(e) => setTelefono_cliente(e.target.value)}
                     />
                   </FloatingLabel>
                 </Col>
 
                 <Col sm="12" md="6" lg="6">
                   <FloatingLabel controlId="email_cliente" label="Email">
-                    <Form.Control 
-                      type="text" 
+                    <Form.Control
+                      type="text"
                       placeholder="Ingrese el email"
                       value={email_cliente}
-                      onChange={(e) => setEmail_cliente(e.target.value)} 
+                      onChange={(e) => setEmail_cliente(e.target.value)}
                     />
                   </FloatingLabel>
                 </Col>
 
                 <Col sm="12" md="12" lg="12">
                   <FloatingLabel controlId="contrasena_cliente" label="contraseña">
-                    <Form.Control 
-                      type="text" 
-                      placeholder="Ingrese la contraseña" 
+                    <Form.Control
+                      type="text"
+                      placeholder="Ingrese la contraseña"
                       value={contrasena_cliente}
                       onChange={(e) => setContrasena_cliente(e.target.value)}
                     />
