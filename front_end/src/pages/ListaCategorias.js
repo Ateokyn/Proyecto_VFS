@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaIconName } from 'react-icons/fa';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
 
@@ -119,6 +120,7 @@ function ListaCategoria() {
       <Card className="m-3">
         <Card.Body>
           <Card.Title className="mb-3">Listado de Categorias</Card.Title>
+
           <Row className="mb-3">
             <Col>
               <FloatingLabel controlId="search" label="Buscar">
@@ -131,6 +133,7 @@ function ListaCategoria() {
               </FloatingLabel>
             </Col>
           </Row>
+
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -147,8 +150,8 @@ function ListaCategoria() {
                   <td>{categoria.nombre_categoria}</td>
                   <td>{categoria.descripcion_categoria}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(categoria)}>Actualizar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(categoria.id_categoria)}>Eliminar</Button>
+                    <Button variant="primary" onClick={() => openModal(categoria)}>Eliminar </Button>
+                    <Button variant="danger" onClick={() => handleDelete(categoria.id_categoria)}>Editar </Button>
                   </td>
                 </tr>
               ))}

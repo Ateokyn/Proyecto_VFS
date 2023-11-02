@@ -3,6 +3,7 @@ import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } 
 import Header from '../components/Header';
 
 function ListaProveedor() {
+  const [searchQuery, setSearchQuery] = useState('');
   const [proveedores, setProveedores] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedProveedor, setSelectedProveedor] = useState({});
@@ -11,6 +12,10 @@ function ListaProveedor() {
     direccion_proveedor: '',
     ciudad_proveedor: '',
   });
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   // Función para abrir el modal y pasar los datos del docente seleccionado
   const openModal = (proveedores) => {
@@ -49,8 +54,8 @@ function ListaProveedor() {
   };
 
 
-   // Función para enviar el formulario de actualización
-   const handleUpdate = () => {
+  // Función para enviar el formulario de actualización
+  const handleUpdate = () => {
     // Realiza la solicitud PUT al servidor para actualizar el registro
     fetch(`http://localhost:5000/crud/update_proveedore/${selectedProveedor.id_proveedor}`, {
       method: 'PUT',
@@ -95,6 +100,21 @@ function ListaProveedor() {
       .catch((error) => console.error('Error al obtener los docentes y personas:', error));
   }, []);
 
+  const filteredProveedor = proveedores.filter((proveedor) => {
+    // Convierte los valores de los campos a minúsculas para realizar una búsqueda insensible a mayúsculas y minúsculas
+    const empresa_proveedor = proveedor.empresa_proveedor.toLowerCase();
+    const direccion_proveedor = proveedor.direccion_proveedor.toLowerCase();
+    const ciudad_proveedor = proveedor.ciudad_proveedor.toLowerCase();
+    const search = searchQuery.toLowerCase();
+
+    // Verifica si la cadena de búsqueda se encuentra en algún campo
+    return (
+      empresa_proveedor.includes(search) ||
+      direccion_proveedor.includes(search) ||
+      ciudad_proveedor.includes(search)
+    );
+  });
+
   return (
     <div>
       <Header />
@@ -102,10 +122,24 @@ function ListaProveedor() {
       <Card className="m-3">
         <Card.Body>
           <Card.Title className="mb-3">Listado de proveedores</Card.Title>
+
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+
           <Table striped bordered hover>
             <thead>
               <tr>
-              <th abbr="Id">Id</th>
+                <th abbr="Id">Id</th>
                 <th>Empresa</th>
                 <th>Direcciòn</th>
                 <th>Ciudad</th>
@@ -113,7 +147,7 @@ function ListaProveedor() {
               </tr>
             </thead>
             <tbody>
-              {proveedores.map((proveedor) => (
+              {filteredProveedor.map((proveedor) => (
                 <tr key={proveedor.id_proveedor}>
                   <td>{proveedor.id_proveedor}</td>
                   <td>{proveedor.empresa_proveedor}</td>

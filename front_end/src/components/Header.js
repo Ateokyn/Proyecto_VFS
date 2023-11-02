@@ -12,7 +12,6 @@ function Header() {
 
   return (
     <div>
-      {/* Navbar principal */}
       <Navbar className="navbar-color" variant="dark" expand="md">
         <Container>
           <Navbar.Brand href="#home">Variedades Figueroa Soza</Navbar.Brand>
@@ -103,7 +102,7 @@ function Header() {
             <Nav.Link>
               <Link to="/" className="link-unstyled">Inicio</Link>
             </Nav.Link>
-            
+
             <NavDropdown title="Clientes" id="clientes">
               <NavDropdown.Item>
                 <Link to="/Cliente" className="link-unstyled">Registrar Cliente</Link>
@@ -157,7 +156,7 @@ function Header() {
         </Offcanvas.Body>
       </Offcanvas>
     </div>
-  );
+  )
 }
 
 export default Header;

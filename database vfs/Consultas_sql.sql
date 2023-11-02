@@ -1,3 +1,6 @@
+Use database_vfs;
+Select * from bitacora;
+
 -- CRUD Cliente
 CALL InsertarCliente(
     'Kenny',

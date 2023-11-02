@@ -64,7 +64,7 @@ function Cliente() {
 
   return (
     <div>
-      <Header />
+      <Header/>
 
       <Container>
         <Card className="mt-3">

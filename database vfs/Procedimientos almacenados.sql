@@ -1,3 +1,4 @@
+USE database_vfs;
 /* Procedimientos almacenados */
 -- Insertar Cliente ----------------------------------------------
 DELIMITER //
@@ -222,12 +223,11 @@ DELIMITER ;
 /*---------------------------------------------------------------------------------*/
 -- Insertar Producto ----------------------------------------------
 DELIMITER //
-
 CREATE PROCEDURE InsertarProducto(
     IN id_prov INT,
     IN id_cat INT,
     IN nombre VARCHAR(30),
-    IN foto_descriptiva BLOB,
+    IN imagen_url VARCHAR(255),
     IN precio_venta DECIMAL(12,2),
     IN precio_compra DECIMAL(12,2),
     IN cantidad INT,
@@ -236,12 +236,11 @@ CREATE PROCEDURE InsertarProducto(
     IN genero CHAR(1)
 )
 BEGIN
-    INSERT INTO Producto (id_proveedor, id_categoria, nombre_producto, foto_descriptiva, precio_venta, precio_compra, cantidad, talla, descripcion, genero)
-    VALUES (id_prov, id_cat, nombre, foto_descriptiva, precio_venta, precio_compra, cantidad, talla, descripcion, genero);
+    INSERT INTO Producto (id_proveedor, id_categoria, nombre_producto, imagenUrl, precio_venta, precio_compra, cantidad, talla, descripcion, genero)
+    VALUES (id_prov, id_cat, nombre, imagen_url,precio_venta, precio_compra, cantidad, talla, descripcion, genero);
 END //
 
 DELIMITER ;
-
 -- Actualizar Producto ----------------------------------------------
 DELIMITER //
 
@@ -250,7 +249,7 @@ CREATE PROCEDURE ActualizarProducto(
     IN nuevo_id_proveedor INT,
     IN nuevo_id_categoria INT,
     IN nuevo_nombre_producto VARCHAR(30),
-    IN nueva_foto_descriptiva BLOB,
+    IN nuevo_imagen_producto VARCHAR(255),
     IN nuevo_precio_venta DECIMAL(12, 2),
     IN nuevo_precio_compra DECIMAL(12, 2),
     IN nueva_cantidad INT,
@@ -264,7 +263,7 @@ BEGIN
         id_proveedor = nuevo_id_proveedor,
         id_categoria = nuevo_id_categoria,
         nombre_producto = nuevo_nombre_producto,
-        foto_descriptiva = nueva_foto_descriptiva,
+        imagenUrl = nuevo_imagen_producto,
         precio_venta = nuevo_precio_venta,
         precio_compra = nuevo_precio_compra,
         cantidad = nueva_cantidad,
@@ -305,7 +304,6 @@ END //
 DELIMITER ;
 
 -- Eliminar Producto ----------------------------------------------
--
 
 /*---------------------------------------------------------------------------------*/
 -- Insertar Categoria ----------------------------------------------
@@ -343,7 +341,7 @@ DELIMITER ;
 -- Consultar Categoria ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarCategoriaPorID(
+CREATE PROCEDURE ConsultarCategoria(
     IN id_categoria INT
 )
 BEGIN

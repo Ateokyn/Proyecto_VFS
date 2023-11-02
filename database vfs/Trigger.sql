@@ -1,6 +1,9 @@
-/* TRIGGER */
+USE database_vfs;
 
+/* TRIGGER */
 -- Tabla Bitacora
+-- Select * from bitacora;
+-- Drop table bitacora;
 CREATE TABLE bitacora (
 	id_bitacora INT NOT NULL AUTO_INCREMENT,
     transaccion VARCHAR (10) NOT NULL,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Inicio';
 import Cliente from './pages/Cliente';
@@ -13,9 +13,11 @@ import Producto from './pages/Producto';
 import ListaProductos from './pages/ListaProductos';
 
 function App() {
+
   return (
     <Router>
       <Routes>
+        <Route path="/home" element={<Home />} />
         <Route path="/" element={<Home />} />
         <Route path="/Cliente" element={<Cliente />} />
         <Route path="/ListaClientes" element={<ListaClientes />} />
@@ -26,7 +28,7 @@ function App() {
         <Route path="/Proveedor" element={<Proveedor />} />
         <Route path="/ListaProveedores" element={<ListaProveedores />} />
         <Route path="/Producto" element={<Producto />} />
-        <Route path="/ListaProductos" element={<ListaProductos />} /> 
+        <Route path="/ListaProductos" element={<ListaProductos />} />
       </Routes>
     </Router>
   );

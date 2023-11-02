@@ -3,6 +3,7 @@ import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } 
 import Header from '../components/Header';
 
 function ListaCliente() {
+  const [searchQuery, setSearchQuery] = useState('');
   const [clientes, setClientes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedCliente, setSelectedCliente] = useState({});
@@ -16,6 +17,10 @@ function ListaCliente() {
     email_cliente: '',
     contrasena_cliente: '',
   });
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   // Función para abrir el modal y pasar los datos del docente seleccionado
   const openModal = (clientes) => {
@@ -108,6 +113,31 @@ function ListaCliente() {
       .catch((error) => console.error('Error al obtener los docentes y personas:', error));
   }, []);
 
+  const filteredCliente = clientes.filter((cliente) => {
+    // Convierte los valores de los campos a minúsculas para realizar una búsqueda insensible a mayúsculas y minúsculas
+    const nombre1_cliente = cliente.nombre1_cliente.toLowerCase();
+    const nombre2_cliente = cliente.nombre2_cliente.toLowerCase();
+    const apellido1_cliente = cliente.apellido1_cliente.toLowerCase();
+    const apellido2_cliente = cliente.apellido2_cliente.toLowerCase();
+    const fechanac_cliente = cliente.fechanac_cliente.toLowerCase();
+    const telefono_cliente = cliente.telefono_cliente.toLowerCase();
+    const email_cliente = cliente.email_cliente.toLowerCase();
+    const contrasena_cliente = cliente.contrasena_cliente.toLowerCase();
+    const search = searchQuery.toLowerCase();
+
+    // Verifica si la cadena de búsqueda se encuentra en algún campo
+    return (
+      nombre1_cliente.includes(search) ||
+      nombre2_cliente.includes(search) ||
+      apellido1_cliente.includes(search) ||
+      apellido2_cliente.includes(search) ||
+      fechanac_cliente.includes(search) ||
+      telefono_cliente.includes(search) ||
+      email_cliente.includes(search) ||
+      contrasena_cliente.includes(search)
+    );
+  });
+
   return (
     <div>
       <Header />
@@ -115,6 +145,20 @@ function ListaCliente() {
       <Card className="m-3">
         <Card.Body>
           <Card.Title className="mb-3">Listado de Clientes</Card.Title>
+
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -131,7 +175,7 @@ function ListaCliente() {
               </tr>
             </thead>
             <tbody>
-              {clientes.map((cliente) => (
+              {filteredCliente.map((cliente) => (
                 <tr key={cliente.id_cliente}>
                   <td>{cliente.id_cliente}</td>
                   <td>{cliente.nombre1_cliente}</td>

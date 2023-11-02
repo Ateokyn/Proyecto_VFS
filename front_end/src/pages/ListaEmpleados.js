@@ -3,6 +3,7 @@ import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } 
 import Header from '../components/Header';
 
 function ListaEmpleado() {
+  const [searchQuery, setSearchQuery] = useState('');
   const [empleados, setEmpleados] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedEmpleado, setSelectedEmpleado] = useState({});
@@ -16,6 +17,10 @@ function ListaEmpleado() {
     email_empleado: '',
     contrasena_empleado: '',
   });
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
 
   // Función para abrir el modal y pasar los datos del docente seleccionado
   const openModal = (empleados) => {
@@ -105,6 +110,31 @@ function ListaEmpleado() {
       .catch((error) => console.error('Error al obtener los docentes y personas:', error));
   }, []);
 
+  const filteredEmpleado = empleados.filter((empleado) => {
+    // Convierte los valores de los campos a minúsculas para realizar una búsqueda insensible a mayúsculas y minúsculas
+    const nombre1_empleado = empleado.nombre1_empleado.toLowerCase();
+    const nombre2_empleado = empleado.nombre2_empleado.toLowerCase();
+    const apellido1_empleado = empleado.apellido1_empleado.toLowerCase();
+    const apellido2_empleado = empleado.apellido2_empleado.toLowerCase();
+    const especialidad_empleado = empleado.especialidad_empleado.toLowerCase();
+    const telefono_empleado = empleado.telefono_empleado.toLowerCase();
+    const email_empleado = empleado.email_empleado.toLowerCase();
+    const contrasena_empleado = empleado.contrasena_empleado.toLowerCase();
+    const search = searchQuery.toLowerCase();
+
+    // Verifica si la cadena de búsqueda se encuentra en algún campo
+    return (
+      nombre1_empleado.includes(search) ||
+      nombre2_empleado.includes(search) ||
+      apellido1_empleado.includes(search) ||
+      apellido2_empleado.includes(search) ||
+      especialidad_empleado.includes(search) ||
+      telefono_empleado.includes(search) ||
+      email_empleado.includes(search) ||
+      contrasena_empleado.includes(search)
+    );
+  });
+
   return (
     <div>
       <Header />
@@ -112,10 +142,24 @@ function ListaEmpleado() {
       <Card className="m-3">
         <Card.Body>
           <Card.Title className="mb-3">Listado de Empleados</Card.Title>
+
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+
           <Table striped bordered hover>
             <thead>
               <tr>
-              <th abbr="Id">Id</th>
+                <th abbr="Id">Id</th>
                 <th>Primer nombre</th>
                 <th>Segundo nombre</th>
                 <th>Primer apellidos</th>
@@ -128,7 +172,7 @@ function ListaEmpleado() {
               </tr>
             </thead>
             <tbody>
-              {empleados.map((empleado) => (
+              {filteredEmpleado.map((empleado) => (
                 <tr key={empleado.id_empleado}>
                   <td>{empleado.id_empleado}</td>
                   <td>{empleado.nombre1_empleado}</td>
@@ -158,6 +202,20 @@ function ListaEmpleado() {
           <Card className="mt-3">
             <Card.Body>
               <Card.Title>Registro de Empleado</Card.Title>
+
+              <Row className="mb-3">
+                <Col>
+                  <FloatingLabel controlId="search" label="Buscar">
+                    <Form.Control
+                      type="text"
+                      placeholder="Buscar"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                    />
+                  </FloatingLabel>
+                </Col>
+              </Row>
+
               <Form className="mt-3">
                 <Row className="g-3">
 
