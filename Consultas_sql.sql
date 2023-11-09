@@ -27,9 +27,7 @@ CALL ActualizarCliente(
     'NuevaContrasena'
 );
 
-Call ConsultarCliente(1);
-
-CALL BuscarCliente('Antonio Tellez');
+Call MostrarCliente(1);
 
 CALL EliminarCliente(1);
 
@@ -57,9 +55,7 @@ CALL ActualizarEmpleado(
     'contrasena1234'
 );
 
-Call ConsultarEmpleado(1);
-
-CALL BuscarEmpleado('Gisela Paola');
+Call MostrarEmpleado(1);
 
 CALL EliminarEmpleado(1);
 
@@ -91,9 +87,7 @@ CALL ActualizarProducto(
     'M'
 );
 
-CALL ConsultarProductoPorID(1);
-
-CALL BuscarProductoPorNombre('NombreABuscar');
+CALL MostrarProducto(1);
 
 CALL EliminarProducto(1);
 
@@ -102,9 +96,7 @@ CALL InsertarCategoria('Nombre de la Categoría', 'Descripción de la Categoría
 
 CALL ActualizarCategoria(1, 'Nuevo Nombre de Categoría', 'Nueva Descripción de Categoría');
 
-CALL ConsultarCategoriaPorID(1);
-
-CALL BuscarCategoriaPorNombre('NombreABuscar');
+CALL MostrarCategoria(1);
 
 CALL EliminarCategoria(1);
 
@@ -113,9 +105,7 @@ CALL InsertarCita(1, 2, 'Corte de Pelo', '2023-10-02', '14:30:00', TRUE, 'Coment
 
 CALL ActualizarCita(1, 3, 4, 'Nuevo Tipo de Servicio', '2023-10-03', '15:00:00', FALSE, 'Nuevo Comentario');
 
-CALL ConsultarCitaPorID(1);
-
-CALL BuscarCitaPorCliente(1);
+CALL MostrarCita(1);
 
 CALL EliminarCita(1);
 
@@ -124,16 +114,14 @@ CALL InsertarCompra(1, 2, 3, '2023-10-02', '14:30:00');
 
 CALL ActualizarCompra(1, 2, 3, 4, '2023-10-03', '15:00:00');
 
-CALL ConsultarCompraPorID(1);
-
-CALL BuscarComprasPorCliente(1);
+CALL MostrarCompra(1);
 
 CALL EliminarCompra(1);
 
 -- CRUD Tipo de pago 
 CALL InsertarTipoPago('Tarjeta de Crédito');
 
-CALL ConsultarTipoPagoPorID(1);
+CALL MostrarTipoPago(1);
 
 CALL EliminarTipoPago(1);
 
@@ -142,11 +130,7 @@ CALL InsertarTipoEntrega(1, 'Entrega a domicilio', 'En proceso', 'Calle Principa
 
 CALL ActualizarTipoEntrega(1, 2, 'Entrega a domicilio', 'En proceso', 'Nueva Dirección');
 
-CALL ConsultarTipoEntregaPorID(1);
-
-CALL ConsultarTipoEntregaPorID(1);
-
-CALL BuscarTipoEntregaPorTipo('Entrega a domicilio');
+CALL MostrarTipoEntrega(1);
 
 -- CRUD Detalle de compra 
 CALL EliminarTipoEntrega(1);
@@ -154,7 +138,7 @@ CALL EliminarTipoEntrega(1);
 -- CRUD Resena
 CALL InsertarDetalleCompra(1, 2, 5);
 
-CALL ConsultarResenaPorID(1);
+CALL MostrarResena(1);
 
 CALL EliminarResena(1);
 
@@ -163,16 +147,14 @@ CALL InsertarListaDeseos(1, '2023-10-02 14:30:00');
 
 CALL ActualizarListaDeseos(1, '2023-10-02 15:00:00');
 
-CALL ConsultarListaDeseosPorID(1);
-
-CALL BuscarListasDeseosPorCliente(1);
+CALL MostrarListaDeseos(1);
 
 CALL EliminarListaDeseos(1);
 
 -- CRUD Lista de detalle 
 CALL InsertarElementoListaDeseos(1, 2);
 
-CALL ConsultarDetalleListaDeseosPorID(1);
+CALL MostrarDetalleListaDeseos(1);
 
 CALL EliminarDetalleListaDeseos(1);
 
@@ -181,9 +163,7 @@ CALL InsertarProveedor('Nombre de la Empresa', 'Dirección del Proveedor', 'Ciud
 
 CALL ActualizarProveedor(1, 'Nuevo Nombre de la Empresa', 'Nueva Dirección del Proveedor', 'Nueva Ciudad del Proveedor');
 
-CALL ConsultarProveedorPorID(1);
-
-CALL BuscarProveedoresPorNombreEmpresa('Nombre de la Empresa');
+CALL MostrarProveedor(1);
 
 CALL EliminarProveedor(1);
  

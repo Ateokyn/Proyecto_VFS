@@ -3,11 +3,10 @@ import { Form, Row, Col, Container, FloatingLabel, Card, Button } from 'react-bo
 import Header from '../components/Header';
 import '../styles/App.css';
 
-function Categoria({ rol }) {
+function Tipo_pago({ rol }) {
 
     // Crear un estado para cada campo del formulario
-    const [nombre_categoria, setNombre_categoria] = useState('');
-    const [descripcion_categoria, setDescripcion_categoria] = useState('');
+    const [tipo, setTipo] = useState('');
 
     // Función para manejar el envío del formulario
     const handleSubmit = async (e) => {
@@ -15,13 +14,12 @@ function Categoria({ rol }) {
 
         // Crear un objeto con los datos del formulario
         const formData = {
-            nombre_categoria,
-            descripcion_categoria,
+            tipo,
         };
 
         try {
             // Realizar una solicitud HTTP al backend para enviar los datos
-            const response = await fetch('http://localhost:5000/crud/create_categoria', {
+            const response = await fetch('http://localhost:5000/crud/create_tipo_pago', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,8 +31,7 @@ function Categoria({ rol }) {
                 // El registro se creó exitosamente
                 alert('Registro exitoso');
                 // Reiniciar los campos del formulario
-                setNombre_categoria('');
-                setDescripcion_categoria('');
+                setTipo('');
             } else {
                 alert('Error al registrar el cliente');
             }
@@ -51,28 +48,17 @@ function Categoria({ rol }) {
             <Container>
                 <Card className="margen-contenedor">
                     <Card.Body>
-                        <Card.Title>Registro de Categoria</Card.Title>
+                        <Card.Title>Nuevo tipo de pago</Card.Title>
                         <Form className="mt-3" onSubmit={handleSubmit}>
                             <Row className="g-3">
 
                                 <Col sm="6" md="6" lg="6">
-                                    <FloatingLabel controlId="nombre_categoria" label="Categoria">
+                                    <FloatingLabel controlId="tipo" label="Tipo pago">
                                         <Form.Control
                                             type="text"
-                                            placeholder="Ingrese una Categoria"
-                                            value={nombre_categoria}
-                                            onChange={(e) => setNombre_categoria(e.target.value)}
-                                        />
-                                    </FloatingLabel>
-                                </Col>
-
-                                <Col sm="6" md="6" lg="6">
-                                    <FloatingLabel controlId="descripcion_categoria" label="Descripciòn">
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Ingrese una Descripciòn"
-                                            value={descripcion_categoria}
-                                            onChange={(e) => setDescripcion_categoria(e.target.value)}
+                                            placeholder="Ingrese un nuevo metodo de pago"
+                                            value={tipo}
+                                            onChange={(e) => setTipo(e.target.value)}
                                         />
                                     </FloatingLabel>
                                 </Col>
@@ -92,4 +78,4 @@ function Categoria({ rol }) {
     );
 }
 
-export default Categoria;
+export default Tipo_pago;

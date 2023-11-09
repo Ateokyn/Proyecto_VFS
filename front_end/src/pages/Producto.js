@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Form, Row, Col, Container, FloatingLabel, Card, Button } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
 
-function Producto() {
+function Producto({ rol }) {
 
     const [id_categorias, setId_categorias] = useState([]); // Estado para almacenar las categorías
     const [id_categoria, setId_categoria] = useState(''); // Estado para el valor seleccionado de categoría
     const [id_proveedores, setId_proveedores] = useState([]); // Estado para almacenar los proveedores
     const [id_proveedor, setId_proveedor] = useState(''); // Estado para el valor seleccionado de proveedor
-
-    const [imageUrl, setImageUrl] = useState('');
-    const [imageFile, setImageFile] = useState([]); // Nuevo estado para el archivo de imagen
 
     // Crear un estado para cada campo del formulario
     const [nombre_producto, setNombre_producto] = useState('');
@@ -20,8 +16,22 @@ function Producto() {
     const [precio_compra, setPrecio_compra] = useState('');
     const [cantidad, setCantidad] = useState('');
     const [talla, setTalla] = useState(' ');
-    const [descripcion, setDescripcion] = useState('');
     const [genero, setGenero] = useState('');
+
+    const [imagen, setImagen] = useState('');
+
+    const handleImagenChange = (event) => {
+        const file = event.target.files[0]; // Obtener el primer archivo seleccionado
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const base64String = reader.result; // Obtener la imagen en formato base64
+            setImagen(base64String); // Puedes visualizar la imagen en base64 en la consola para asegurarte de que la conversión se hizo correctamente
+        };
+        if (file) {
+            reader.readAsDataURL(file); // Lee el contenido del archivo como base64
+        }
+    };
 
     // Función para manejar el envío del formulario
     const handleSubmit = async (e) => {
@@ -32,12 +42,11 @@ function Producto() {
             id_proveedor,
             id_categoria,
             nombre_producto,
-            imageUrl,
+            imagen,
             precio_venta,
             precio_compra,
             cantidad,
             talla,
-            descripcion,
             genero,
         };
 
@@ -58,13 +67,11 @@ function Producto() {
                 setId_proveedor('');
                 setId_categoria('');
                 setNombre_producto('');
-                setImageUrl('');
-                setImageFile('');
+                setImagen('')
                 setPrecio_venta('');
                 setPrecio_compra('');
                 setCantidad('');
                 setTalla('');
-                setDescripcion('');
                 setGenero('');
             } else {
                 alert('Error al registrar el producto');
@@ -72,25 +79,6 @@ function Producto() {
         } catch (error) {
             console.error('Error en la solicitud:', error);
             alert('Error en la solicitud al servidor');
-        }
-    };
-
-    const handleFileChange = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImageFile(file); // Actualiza el estado imageFile
-            const formData = new FormData();
-            formData.append('imagen', file);
-
-            try {
-                const response = await axios.post('http://localhost:5000/uploads', formData);
-                if (response.data.imageUrl) {
-                    setImageUrl(response.data.imageUrl);
-                }
-            } catch (error) {
-                console.error('Error al cargar la imagen:', error);
-                // Manejar el error de carga de la imagen
-            }
         }
     };
 
@@ -122,10 +110,10 @@ function Producto() {
 
     return (
         <div>
-            <Header />
+            <Header rol={rol}/>
 
             <Container>
-                <Card className="mt-3">
+                <Card className="margen-contenedor">
                     <Card.Body>
                         <Card.Title>Registro de Producto</Card.Title>
                         <Form className="mt-3" onSubmit={handleSubmit}>
@@ -177,97 +165,86 @@ function Producto() {
                                     </FloatingLabel>
                                 </Col>
 
-                            <Col sm="6" md="6" lg="6">
-                                <Form.Group controlId="selectedFile" className="mb-3">
-                                    <Form.Control
-                                        type="file" name="imagen"
-                                        accept=".jpg, .png, .jpeg"
-                                        size="lg"
-                                        onChange={handleFileChange}
-                                    />
-                                </Form.Group>
-                            </Col>
+                                <Col sm="12" md="6" lg="6">
+                                    <Form.Group controlId="imagen" className="" >
+                                        <Form.Control
+                                            type="file"
+                                            accept=".jpg, .png, .jpeg"
+                                            size="lg"
+                                            onChange={handleImagenChange}
+                                        />
+                                    </Form.Group>
+                                </Col>
 
-                            <Col sm="6" md="6" lg="6">
-                                <FloatingLabel controlId="precio_venta" label="Precio venta">
-                                    <Form.Control
-                                        type="number" // Cambiado a "number" para capturar valores numéricos
-                                        placeholder="Ingrese el precio de venta"
-                                        value={precio_venta}
-                                        onChange={(e) => setPrecio_venta(e.target.value)}
-                                    />
-                                </FloatingLabel>
-                            </Col>
+                                <Col sm="6" md="6" lg="6">
+                                    <FloatingLabel controlId="precio_venta" label="Precio venta">
+                                        <Form.Control
+                                            type="number" // Cambiado a "number" para capturar valores numéricos
+                                            placeholder="Ingrese el precio de venta"
+                                            value={precio_venta}
+                                            onChange={(e) => setPrecio_venta(e.target.value)}
+                                        />
+                                    </FloatingLabel>
+                                </Col>
 
 
-                            <Col sm="6" md="6" lg="6">
-                                <FloatingLabel controlId="precio_compra" label="Precio compra">
-                                    <Form.Control
-                                        type="number" // Cambiado a "number" para capturar valores numéricos
-                                        placeholder="Ingrese el precio de compra"
-                                        value={precio_compra}
-                                        onChange={(e) => setPrecio_compra(e.target.value)}
-                                    />
-                                </FloatingLabel>
-                            </Col>
+                                <Col sm="6" md="6" lg="6">
+                                    <FloatingLabel controlId="precio_compra" label="Precio compra">
+                                        <Form.Control
+                                            type="number" // Cambiado a "number" para capturar valores numéricos
+                                            placeholder="Ingrese el precio de compra"
+                                            value={precio_compra}
+                                            onChange={(e) => setPrecio_compra(e.target.value)}
+                                        />
+                                    </FloatingLabel>
+                                </Col>
 
-                            <Col sm="6" md="6" lg="6">
-                                <FloatingLabel controlId="cantidad" label="Cantidad">
-                                    <Form.Control
-                                        type="number" // Cambiado a "number" para capturar valores numéricos
-                                        placeholder="Ingrese la cantidad"
-                                        value={cantidad}
-                                        onChange={(e) => setCantidad(e.target.value)}
-                                    />
-                                </FloatingLabel>
-                            </Col>
+                                <Col sm="6" md="6" lg="6">
+                                    <FloatingLabel controlId="cantidad" label="Cantidad">
+                                        <Form.Control
+                                            type="number" // Cambiado a "number" para capturar valores numéricos
+                                            placeholder="Ingrese la cantidad"
+                                            value={cantidad}
+                                            onChange={(e) => setCantidad(e.target.value)}
+                                        />
+                                    </FloatingLabel>
+                                </Col>
 
-                            <Col sm="12" md="12" lg="12">
-                                <FloatingLabel controlId="talla" label="Talla">
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Ingrese la talla"
-                                        value={talla}
-                                        onChange={(e) => setTalla(e.target.value)}
-                                    />
-                                </FloatingLabel>
-                            </Col>
+                                <Col sm="12" md="12" lg="12">
+                                    <FloatingLabel controlId="talla" label="Talla">
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Ingrese la talla"
+                                            value={talla}
+                                            onChange={(e) => setTalla(e.target.value)}
+                                        />
+                                    </FloatingLabel>
+                                </Col>
 
-                            <Col sm="12" md="12" lg="12">
-                                <FloatingLabel controlId="descripcion" label="Descripciòn">
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Ingrese una descripciòn"
-                                        value={descripcion}
-                                        onChange={(e) => setDescripcion(e.target.value)}
-                                    />
-                                </FloatingLabel>
-                            </Col>
+                                <Col sm="12" md="6" lg="4">
+                                    <FloatingLabel controlId="genero" label="Género">
+                                        <Form.Select
+                                            aria-label="Genero"
+                                            value={genero}
+                                            onChange={(e) => setGenero(e.target.value)}
+                                        >
+                                            <option>Seleccione el género</option>
+                                            <option value="F">F</option>
+                                            <option value="M">M</option>
+                                        </Form.Select>
+                                    </FloatingLabel>
+                                </Col>
 
-                            <Col sm="12" md="6" lg="4">
-                                <FloatingLabel controlId="genero" label="Género">
-                                    <Form.Select
-                                        aria-label="Genero"
-                                        value={genero}
-                                        onChange={(e) => setGenero(e.target.value)}
-                                    >
-                                        <option>Seleccione el género</option>
-                                        <option value="F">F</option>
-                                        <option value="M">M</option>
-                                    </Form.Select>
-                                </FloatingLabel>
-                            </Col>
-
-                        </Row>
-                        <div className="center-button">
-                            <Button variant="primary" type="submit" className="mt-3" size="lg">
-                                Registrar
-                            </Button>
-                        </div>
-                    </Form>
-                </Card.Body>
-            </Card>
-        </Container>
+                            </Row>
+                            <div className="center-button">
+                                <Button variant="primary" type="submit" className="mt-3" size="lg">
+                                    Registrar
+                                </Button>
+                            </div>
+                        </Form>
+                    </Card.Body>
+                </Card>
+            </Container>
 
         </div >
     );

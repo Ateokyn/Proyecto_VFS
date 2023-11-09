@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
+import { FaTrashCan, FaPencil } from 'react-icons/fa6';
 
-function ListaEmpleado() {
+function ListaEmpleado({ rol }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [empleados, setEmpleados] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -137,9 +138,9 @@ function ListaEmpleado() {
 
   return (
     <div>
-      <Header />
+      <Header rol={rol}/>
 
-      <Card className="m-3">
+      <Card className="margen-contenedor">
         <Card.Body>
           <Card.Title className="mb-3">Listado de Empleados</Card.Title>
 
@@ -184,8 +185,8 @@ function ListaEmpleado() {
                   <td>{empleado.email_empleado}</td>
                   <td>{empleado.contrasena_empleado}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(empleado)}>Actualizar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(empleado.id_empleado)}>Eliminar</Button>
+                    <Button variant="primary" onClick={() => openModal(empleado)}><FaPencil/></Button>
+                    <Button variant="danger" onClick={() => handleDelete(empleado.id_empleado)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}

@@ -4,14 +4,13 @@ import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } 
 import Header from '../components/Header';
 import { FaTrashCan, FaPencil } from 'react-icons/fa6';
 
-function ListaCategoria({ rol }) {
+function ListaTipoPago({ rol }) {
   const [searchQuery, setSearchQuery] = useState('');
-  const [categorias, setCategorias] = useState([]);
+  const [tipo_pagos, setTipo_pagos] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedCategoria, setSelectedCategoria] = useState({});
+  const [selectedTipo_pago, setSelectedTipo_pago] = useState({});
   const [formData, setFormData] = useState({
-    nombre_categoria: '',
-    descripcion_categoria: '',
+    tipo: '',
   });
 
   const handleSearchChange = (e) => {
@@ -19,23 +18,14 @@ function ListaCategoria({ rol }) {
   };
 
   // Función para abrir el modal y pasar los datos del docente seleccionado
-  const openModal = (categorias) => {
-    setSelectedCategoria(categorias);
+  const openModal = (tipo_pagos) => {
+    setSelectedTipo_pago(tipo_pagos);
 
     setFormData({
-      nombre_categoria: categorias.nombre_categoria,
-      descripcion_categoria: categorias.descripcion_categoria,
+      tipo: tipo_pagos.tipo,
     });
     setShowModal(true);
   };
-
-  function formatDateForInput(dateTimeString) {
-    const date = new Date(dateTimeString);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Agregar ceros iniciales
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
 
   // Función para manejar cambios en el formulario
   const handleFormChange = (e) => {
@@ -46,10 +36,10 @@ function ListaCategoria({ rol }) {
     });
   };
 
-  const loadCategoria = (id_categoria) => {
-    fetch('http://localhost:5000/crud/read_categoria')
+  const loadTipo_pago = (id_tipo_pago) => {
+    fetch('http://localhost:5000/crud/read_tipo_pago')
       .then((response) => response.json())
-      .then((data) => setCategorias(data))
+      .then((data) => setTipo_pagos(data))
       .catch((error) => console.error('Error al obtener los docentes y personas:', error));
   };
 
@@ -57,7 +47,7 @@ function ListaCategoria({ rol }) {
   // Función para enviar el formulario de actualización
   const handleUpdate = () => {
     // Realiza la solicitud PUT al servidor para actualizar el registro
-    fetch(`http://localhost:5000/crud/update_categoria/${selectedCategoria.id_categoria}`, {
+    fetch(`http://localhost:5000/crud/update_tipo_pago/${selectedTipo_pago.id_tipo_pago}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -68,24 +58,24 @@ function ListaCategoria({ rol }) {
         if (response.ok) {
           // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de docentes
           setShowModal(false);
-          loadCategoria(); // Cargar la lista de docentes actualizada
+          loadTipo_pago(); // Cargar la lista de docentes actualizada
         }
       })
       .catch((error) => console.error('Error al actualizar el registro:', error));
   };
 
   // Función para eliminar un docente
-  const handleDelete = (id_categoria) => {
+  const handleDelete = (id_tipo_pago) => {
     const confirmation = window.confirm('¿Seguro que deseas eliminar este docente?');
     if (confirmation) {
       // Realiza la solicitud DELETE al servidor para eliminar el docente
-      fetch(`http://localhost:5000/crud/delete_categoria/${id_categoria}`, {
+      fetch(`http://localhost:5000/crud/delete_tipo_pago/${id_tipo_pago}`, {
         method: 'DELETE',
       })
         .then((response) => {
           if (response.ok) {
             // La eliminación fue exitosa, refresca la lista de docentes
-            loadCategoria();
+            loadTipo_pago();
           }
         })
         .catch((error) => console.error('Error al eliminar el docente:', error));
@@ -94,23 +84,21 @@ function ListaCategoria({ rol }) {
 
   // Realiza una solicitud GET al servidor para obtener los docentes
   useEffect(() => {
-    fetch('http://localhost:5000/crud/read_categoria')
+    fetch('http://localhost:5000/crud/read_tipo_pago')
       .then((response) => response.json())
-      .then((data) => setCategorias(data))
+      .then((data) => setTipo_pagos(data))
       .catch((error) => console.error('Error al obtener los docentes y personas:', error));
   }, []);
 
 
-  const filteredCategoria = categorias.filter((categoria) => {
+  const filteredTipo_pago = tipo_pagos.filter((tipo_pago) => {
     // Convierte los valores de los campos a minúsculas para realizar una búsqueda insensible a mayúsculas y minúsculas
-    const nombre_categoria = categoria.nombre_categoria.toLowerCase();
-    const descripcion_categoria = categoria.descripcion_categoria.toLowerCase();
+    const tipo = tipo_pago.tipo.toLowerCase();
     const search = searchQuery.toLowerCase();
 
     // Verifica si la cadena de búsqueda se encuentra en algún campo
     return (
-      nombre_categoria.includes(search) ||
-      descripcion_categoria.includes(search)
+      tipo.includes(search)
     );
   });
 
@@ -120,7 +108,7 @@ function ListaCategoria({ rol }) {
 
       <Card className="margen-contenedor">
         <Card.Body>
-          <Card.Title className="mb-3">Listado de Categorias</Card.Title>
+          <Card.Title className="mb-3">Metodos de pago</Card.Title>
 
           <Row className="mb-3">
             <Col>
@@ -135,24 +123,22 @@ function ListaCategoria({ rol }) {
             </Col>
           </Row>
 
-          <Table striped bordered hover responsive>
+          <Table striped bordered hover>
             <thead>
               <tr>
                 <th abbr="Id">Id</th>
-                <th>Nombre categoria</th>
-                <th>Descripción categoria</th>
+                <th>Nombre Tipo</th>
                 <th>Acción</th>
               </tr>
             </thead>
             <tbody>
-              {filteredCategoria.map((categoria) => (
-                <tr key={categoria.id_categoria}>
-                  <td>{categoria.id_categoria}</td>
-                  <td>{categoria.nombre_categoria}</td>
-                  <td>{categoria.descripcion_categoria}</td>
+              {filteredTipo_pago.map((tipo_pago) => (
+                <tr key={tipo_pago.id_tipo_pago}>
+                  <td>{tipo_pago.id_tipo_pago}</td>
+                  <td>{tipo_pago.tipo}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(categoria)}><FaPencil/></Button>
-                    <Button variant="danger" onClick={() => handleDelete(categoria.id_categoria)}><FaTrashCan/></Button>
+                    <Button variant="primary" onClick={() => openModal(tipo_pago)}><FaPencil/></Button>
+                    <Button variant="danger" onClick={() => handleDelete(tipo_pago.id_tipo_pago)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}
@@ -163,12 +149,12 @@ function ListaCategoria({ rol }) {
 
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Actualizar Categoria</Modal.Title>
+          <Modal.Title>Actualizar metodo de pago</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Card className="mt-3">
             <Card.Body>
-              <Card.Title>Registro de Categoria</Card.Title>
+              <Card.Title>Registro de metodo de pago</Card.Title>
 
               <Row className="mb-3">
                 <Col>
@@ -187,24 +173,12 @@ function ListaCategoria({ rol }) {
                 <Row className="g-3">
 
                   <Col sm="6" md="6" lg="4">
-                    <FloatingLabel controlId="nombre_categoria" label="Categoria">
+                    <FloatingLabel controlId="tipo" label="Tipo pago">
                       <Form.Control
                         type="text"
-                        placeholder="Ingrese una categoria"
-                        name="nombre_categoria"
-                        value={formData.nombre_categoria}
-                        onChange={handleFormChange}
-                      />
-                    </FloatingLabel>
-                  </Col>
-
-                  <Col sm="6" md="6" lg="4">
-                    <FloatingLabel controlId="descripcion_categoria" label="Descripción">
-                      <Form.Control
-                        type="text"
-                        placeholder="Ingrese una descripción"
-                        name="descripcion_categoria"
-                        value={formData.descripcion_categoria}
+                        placeholder="Ingrese el nuevo metodo de pago"
+                        name="tipo"
+                        value={formData.tipo}
                         onChange={handleFormChange}
                       />
                     </FloatingLabel>
@@ -229,4 +203,4 @@ function ListaCategoria({ rol }) {
   );
 }
 
-export default ListaCategoria;
+export default ListaTipoPago;

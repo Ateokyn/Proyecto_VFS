@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
+import { FaTrashCan, FaPencil } from 'react-icons/fa6';
 
-function ListaProveedor() {
+function ListaProveedor({ rol }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [proveedores, setProveedores] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -117,9 +118,9 @@ function ListaProveedor() {
 
   return (
     <div>
-      <Header />
+      <Header rol={rol}/>
 
-      <Card className="m-3">
+      <Card className="margen-contenedor">
         <Card.Body>
           <Card.Title className="mb-3">Listado de proveedores</Card.Title>
 
@@ -154,8 +155,8 @@ function ListaProveedor() {
                   <td>{proveedor.direccion_proveedor}</td>
                   <td>{proveedor.ciudad_proveedor}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(proveedor)}>Actualizar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(proveedor.id_proveedor)}>Eliminar</Button>
+                    <Button variant="primary" onClick={() => openModal(proveedor)}><FaPencil/></Button>
+                    <Button variant="danger" onClick={() => handleDelete(proveedor.id_proveedor)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}

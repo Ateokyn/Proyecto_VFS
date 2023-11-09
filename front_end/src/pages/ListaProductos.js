@@ -1,112 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
+import { Table, Button, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
+import { FaTrashCan, FaPencil } from 'react-icons/fa6';
 
-function ListaProducto() {
-  const [categorias, setCategorias] = useState([]); // Estado para almacenar las categorías
-  const [Categoria, setCategoria] = useState(''); // Estado para el valor seleccionado de categoría
-
-  const [proveedores, setProveedores] = useState([]); // Estado para almacenar los proveedores
-  const [Proveedor, setProveedor] = useState(''); // Estado para el valor seleccionado de proveedor
+function ListaProducto({ rol }) {
 
   const [productos, setProductos] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedProducto, setSelectedProducto] = useState({});
   const [formData, setFormData] = useState({
-    id_proveedor: 0,
-    id_categoria: 0,
+
+    id_proveedor: '',
+    id_categoria: '',
     nombre_producto: '',
-    foto_descriptiva: null, // Puedes inicializarlo con el valor adecuado o como null
-    precio_venta: 0,
-    precio_compra: 0,
-    cantidad: 0,
+    imagen: '',
+    precio_venta: '',
+    precio_compra: '',
+    cantidad: '',
     talla: '',
-    descripcion: '',
-    genero: '',
+    genero: ''
   });
 
-  // Función para abrir el modal y pasar los datos del docente seleccionado
-  const openModal = (productos) => {
-    setSelectedProducto(productos);
-
-    // Modificar esta parte para asignar los nombres de proveedor y categoría
-    setFormData({
-      nombre_producto: productos.nombre_producto,
-      foto_descriptiva: productos.foto_descriptiva,
-      precio_venta: productos.precio_venta,
-      precio_compra: productos.precio_compra,
-      cantidad: productos.cantidad,
-      proveedor: productos.id_proveedor,  // Asignar el nombre del proveedor
-      categoria: productos.id_categoria,  // Asignar el nombre de la categoría
-      talla: productos.talla,
-      descripcion: productos.descripcion,
-      genero: productos.genero,
-    });
-    setShowModal(true);
-  };
-
-  // Función para manejar cambios en el formulario
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const loadProducto = () => {
-    fetch('http://localhost:5000/crud/read_producto')
-      .then((response) => response.json())
-      .then((data) => setProductos(data))
-      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
-  };
-
-
-  // Función para enviar el formulario de actualización
-  const handleUpdate = () => {
-    // Realiza la solicitud PUT al servidor para actualizar el registro
-    fetch(`http://localhost:5000/crud/update_producto/${selectedProducto.id_producto}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then((response) => {
-        if (response.ok) {
-          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de docentes
-          setShowModal(false);
-          loadProducto(); // Cargar la lista de docentes actualizada
-        }
-      })
-      .catch((error) => console.error('Error al actualizar el registro:', error));
-  };
-
-  // Función para eliminar un docente
-  const handleDelete = (id_producto) => {
-    const confirmation = window.confirm('¿Seguro que deseas eliminar este docente?');
-    if (confirmation) {
-      // Realiza la solicitud DELETE al servidor para eliminar el docente
-      fetch(`http://localhost:5000/crud/delete_producto/${id_producto}`, {
-        method: 'DELETE',
-      })
-        .then((response) => {
-          if (response.ok) {
-            // La eliminación fue exitosa, refresca la lista de docentes
-            loadProducto();
-          }
-        })
-        .catch((error) => console.error('Error al eliminar el docente:', error));
-    }
-  };
-
-  // Realiza una solicitud GET al servidor para obtener los docentes
-  useEffect(() => {
-    fetch('http://localhost:5000/crud/read_producto')
-      .then((response) => response.json())
-      .then((data) => setProductos(data))
-      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
-  }, []);
+  const [categorias, setcategorias] = useState([]); // Estado para almacenar las categorías
+  const [proveedores, setproveedores] = useState([]); // Estado para almacenar los proveedores
 
   useEffect(() => {
     // Realiza una solicitud a tu ruta para obtener las especialidades
@@ -114,7 +30,7 @@ function ListaProducto() {
       .then(response => response.json())
       .then(data => {
         // Actualiza el estado con las especialidades obtenidas
-        setProveedores(data);
+        setproveedores(data);
       })
       .catch(error => {
         console.error('Error al obtener las especialidades', error);
@@ -127,54 +43,207 @@ function ListaProducto() {
       .then(response => response.json())
       .then(data => {
         // Actualiza el estado con las especialidades obtenidas
-        setCategorias(data);
+        setcategorias(data);
       })
       .catch(error => {
         console.error('Error al obtener las especialidades', error);
       });
   }, []);
 
+  const handleImagenChange = (event) => {
+    const file = event.target.files[0]; // Obtener el primer archivo seleccionado
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64String = reader.result; // Obtener la imagen en formato base64
+      setFormData({
+        ...formData,
+        imagen: base64String
+      });
+    };
+    if (file) {
+      reader.readAsDataURL(file); // Lee el contenido del archivo como base64
+    }
+  };
+
+  // Crear busqueda
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredProductos = productos.filter((producto) => {
+    // Convierte los valores de los campos a minúsculas para realizar una búsqueda insensible a mayúsculas y minúsculas
+
+    const id_proveedor = producto.id_proveedor;
+    const id_categoria = producto.id_categoria;
+    const nombre_producto = producto.nombre_producto.toLowerCase();
+    const precio_venta = producto.precio_venta;
+    const precio_compra = producto.precio_compra;
+    const cantidad = producto.cantidad;
+    const talla = producto.talla.toLowerCase();
+    const genero = producto.genero.toLowerCase();
+    const search = searchQuery.toLowerCase();
+
+
+    // Verifica si la cadena de búsqueda se encuentra en algún campo
+    return (
+
+      id_proveedor == (search) ||
+      id_categoria == (search) ||
+      nombre_producto.includes(search) ||
+      precio_venta == (search) ||
+      precio_compra == (search) ||
+      cantidad == (search) ||
+      talla.includes(search) ||
+      genero.includes(search)
+    );
+  });
+
+  // Función para abrir el modal y pasar los datos del producto seleccionado
+  const openModal = (producto) => {
+    setSelectedProducto(producto);
+
+    setFormData({
+      
+      id_proveedor: producto.id_proveedor,
+      id_categoria: producto.id_categoria,
+      nombre_producto: producto.nombre_producto,
+      imagen: producto.imagen,
+      precio_venta: producto.precio_venta,
+      precio_compra: producto.precio_compra,
+      cantidad: producto.cantidad,
+      talla: producto.talla,
+      genero: producto.genero
+    });
+    setShowModal(true);
+  };
+
+  const loadProducto = () => {
+    fetch('http://localhost:5000/crud/read_producto')
+      .then((response) => response.json())
+      .then((data) => setProductos(data))
+      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+  };
+
+   // Función para manejar cambios en el formulario
+   const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+
+  const handleUpdate = () => {
+    console.log('Datos a enviar al servidor para actualizar:', formData);
+
+    // Realiza la solicitud PUT al servidor para actualizar el registro
+    fetch(`http://localhost:5000/crud/update_producto/${selectedProducto.id_producto}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de productos
+          setShowModal(false);
+          loadProducto(); // Cargar la lista de productos actualizada
+        }
+      })
+      .catch((error) => console.error('Error al actualizar el registro:', error));
+  };
+
+  // Función para eliminar un docente
+  const handleDelete = (id_producto) => {
+    const confirmation = window.confirm('¿Seguro que deseas eliminar este producto?');
+    if (confirmation) {
+      // Realiza la solicitud DELETE al servidor para eliminar el docente
+      fetch(`http://localhost:5000/crud/delete_producto/${id_producto}`, {
+        method: 'DELETE',
+      })
+        .then((response) => {
+          if (response.ok) {
+            // La eliminación fue exitosa, refresca la lista de docentes
+            loadProducto();
+          }
+        })
+        .catch((error) => console.error('Error al eliminar el producto:', error));
+    }
+  };
+
+  // Realiza una solicitud GET al servidor para obtener los docentes
+  useEffect(() => {
+    fetch('http://localhost:5000/crud/read_producto')
+      .then((response) => response.json())
+      .then((data) => setProductos(data))
+      .catch((error) => console.error('Error al obtener los productos:', error));
+  }, []);
+
   return (
     <div>
-      <Header />
+      <Header rol={rol}/>
 
-      <Card className="m-3">
+      <Card className="mt-5">
         <Card.Body>
           <Card.Title className="mb-3">Listado de Productos</Card.Title>
-          <Table striped bordered hover>
+
+          <Row className="mb-3">
+            <Col>
+              <FloatingLabel controlId="search" label="Buscar">
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                />
+              </FloatingLabel>
+            </Col>
+          </Row>
+
+          <Table striped bordered hover responsive>
             <thead>
               <tr>
                 <th abbr="Id">Id</th>
+                <th style={{ display: 'none' }}>IDProveedor</th>
+                <th>Proveedor</th>
+                <th style={{ display: 'none' }}>IDCategoria</th>
+                <th>Categoria</th>
                 <th>Producto</th>
-                <th>Foto</th>
+                <th>Imagen</th>
                 <th>Precio venta</th>
                 <th>Precio compra</th>
                 <th>Cantidad</th>
-                <th>Proveedor</th>
-                <th>Categoria</th>
                 <th>Talla</th>
-                <th>Descripciòn</th>
                 <th>Genero</th>
                 <th>Acción</th>
               </tr>
             </thead>
             <tbody>
-              {productos.map((producto) => (
+              {filteredProductos.map((producto) => (
                 <tr key={producto.id_producto}>
                   <td>{producto.id_producto}</td>
+                  <td style={{ display: 'none' }}>{producto.id_proveedor}</td>
+                  <td>{producto.empresa_proveedor}</td> {/* Cambia a empresa_proveedor */}
+                  <td style={{ display: 'none' }}>{producto.id_categoria}</td>
+                  <td>{producto.nombre_categoria}</td> {/* Cambia a nombre_categoria */}
                   <td>{producto.nombre_producto}</td>
-                  <td>{producto.foto_descriptiva}</td>
+                  <td>
+                    {/* Muestra la imagen en base64 */}
+                    <img src={producto.imagen} alt={producto.nombre} style={{ width: '100px' }} />
+                  </td>
                   <td>{producto.precio_venta}</td>
                   <td>{producto.precio_compra}</td>
                   <td>{producto.cantidad}</td>
-                  <td>{producto.empresa_proveedor}</td> {/* Cambia a empresa_proveedor */}
-                  <td>{producto.nombre_categoria}</td> {/* Cambia a nombre_categoria */}
                   <td>{producto.talla}</td>
-                  <td>{producto.descripcion}</td>
                   <td>{producto.genero}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(producto)}>Actualizar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(producto.id_producto)}>Eliminar</Button>
+                    <Button variant="primary" onClick={() => openModal(producto)}><FaPencil /></Button>
+                    <Button variant="danger" onClick={() => handleDelete(producto.id_producto)}><FaTrashCan /></Button>
                   </td>
                 </tr>
               ))}
@@ -195,6 +264,47 @@ function ListaProducto() {
               <Form className="mt-3">
                 <Row className="g-3">
 
+                <FloatingLabel controlId="proveedores" label="Proveedores">
+                    <Form.Select
+                      aria-label="proveedores"
+                      value={formData.id_proveedor}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          id_proveedor: e.target.value
+                        })
+                      }
+                    >
+                      <option>Seleccione un proveedor</option>
+                      {proveedores.map((proveedor) => (
+                        <option key={proveedor.id_proveedor} value={proveedor.id_proveedor}>
+                          {proveedor.empresa_proveedor}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </FloatingLabel>
+                  <Col sm="12" md="6" lg="6">
+                    <FloatingLabel controlId="categorias" label="Categorias">
+                      <Form.Select
+                        aria-label="categorias"
+                        value={formData.id_categoria}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            id_categoria: e.target.value
+                          })
+                        }
+                      >
+                        <option>Seleccione una categoria</option>
+                        {categorias.map((categoria) => (
+                          <option key={categoria.id_categoria} value={categoria.id_categoria}>
+                            {categoria.nombre_categoria}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </FloatingLabel>
+                  </Col>
+
                   <Col sm="6" md="6" lg="4">
                     <FloatingLabel controlId="nombre_producto" label="Producto">
                       <Form.Control
@@ -207,16 +317,16 @@ function ListaProducto() {
                     </FloatingLabel>
                   </Col>
 
-                  <Col sm="6" md="6" lg="4">
-                    <FloatingLabel controlId="foto_descriptiva" label="Foto">
+                  <Col sm="12" md="12" lg="12">
+                    <Form.Group controlId="imagen" className="" >
                       <Form.Control
-                        type="text"
-                        placeholder="Ingrese un foto"
-                        name="foto_descriptiva"
-                        value={formData.foto_descriptiva}
-                        onChange={handleFormChange}
+                        type="file"
+                        accept=".jpg, .png, .jpeg"
+                        size="lg"
+                        name="imagen"
+                        onChange={handleImagenChange}
                       />
-                    </FloatingLabel>
+                    </Form.Group>
                   </Col>
 
                   <Col sm="6" md="6" lg="4">
@@ -255,42 +365,6 @@ function ListaProducto() {
                     </FloatingLabel>
                   </Col>
 
-                  <Col sm="12" md="6" lg="4">
-                    <FloatingLabel controlId="Proveedor" label="Proveedor">
-                      <Form.Select
-                        aria-label="Proveedor"
-                        value={Proveedor}
-                        onChange={(e) => setProveedor(e.target.value)}
-                      >
-                        <option>Seleccione un proveedor</option>
-                        {proveedores.map((proveedor) => (
-                          <option key={proveedor.id_proveedor} value={proveedor.empresa_proveedor}>
-                            {proveedor.empresa_proveedor}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </FloatingLabel>
-                  </Col>
-
-
-                  <Col sm="12" md="6" lg="4">
-                    <FloatingLabel controlId="Categoria" label="Categoria">
-                      <Form.Select
-                        aria-label="Categoria"
-                        value={Categoria}
-                        onChange={(e) => setCategoria(e.target.value)}
-                      >
-                        <option>Seleccione una categoria</option>
-                        {categorias.map((categoria) => (
-                          <option key={categoria.id_categoria} value={categoria.nombre_categoria}>
-                            {categoria.nombre_categoria}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </FloatingLabel>
-                  </Col>
-
-
                   <Col sm="6" md="6" lg="4">
                     <FloatingLabel controlId="talla" label="Talla">
                       <Form.Control
@@ -303,23 +377,11 @@ function ListaProducto() {
                     </FloatingLabel>
                   </Col>
 
-                  <Col sm="6" md="6" lg="4">
-                    <FloatingLabel controlId="descripcion" label="Descripciòn">
-                      <Form.Control
-                        type="text"
-                        placeholder="Ingrese una descripciòn"
-                        name="descripcion"
-                        value={formData.descripcion}
-                        onChange={handleFormChange}
-                      />
-                    </FloatingLabel>
-                  </Col>
-
                   <Col sm="12" md="6" lg="4">
                     <FloatingLabel controlId="genero" label="Género">
                       <Form.Select
-                        aria-label="Genero"
-                        name="Genero"
+                        aria-label="genero"
+                        name="genero"
                         value={formData.genero}
                         onChange={handleFormChange}
                       >

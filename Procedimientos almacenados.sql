@@ -66,33 +66,16 @@ END //
 
 DELIMITER ;
 
--- Consultar Cliente ----------------------------------------------
+-- Mostrar Cliente ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarCliente(
+CREATE PROCEDURE MostrarCliente(
     IN id_cliente INT
 )
 BEGIN
     SELECT *
     FROM Cliente
     WHERE id_cliente = id_cliente;
-END //
-
-DELIMITER ;
-
--- Buscar Cliente ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarCliente(
-    IN nombre_cliente VARCHAR(255)
-)
-BEGIN
-    SELECT *
-    FROM Cliente
-    WHERE nombre1_cliente LIKE CONCAT('%', nombre_cliente, '%')
-        OR nombre2_cliente LIKE CONCAT('%', nombre_cliente, '%')
-        OR apellido1_cliente LIKE CONCAT('%', nombre_cliente, '%')
-        OR apellido2_cliente LIKE CONCAT('%', nombre_cliente, '%');
 END //
 
 DELIMITER ;
@@ -176,33 +159,16 @@ END //
 
 DELIMITER ;
 
--- Consultar Empelado ----------------------------------------------
+-- Mostrar Empelado ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarEmpleadoPorID(
+CREATE PROCEDURE MostrarEmpleado(
     IN id_empleado INT
 )
 BEGIN
     SELECT *
     FROM Empleado
     WHERE id_empleado = id_empleado;
-END //
-
-DELIMITER ;
-
--- Buscar Emppleado ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarEmpleado(
-    IN nombre_empleado VARCHAR(255)
-)
-BEGIN
-    SELECT *
-    FROM Empleado
-    WHERE nombre1_empleado LIKE CONCAT('%', nombre_empleado, '%')
-        OR nombre2_empleado LIKE CONCAT('%', nombre_empleado, '%')
-        OR apellido1_empleado LIKE CONCAT('%', nombre_empleado, '%')
-        OR apellido2_empleado LIKE CONCAT('%', nombre_empleado, '%');
 END //
 
 DELIMITER ;
@@ -227,17 +193,16 @@ CREATE PROCEDURE InsertarProducto(
     IN id_prov INT,
     IN id_cat INT,
     IN nombre VARCHAR(30),
-    IN imagen_url VARCHAR(255),
+    IN imagen_text VARCHAR(255),
     IN precio_venta DECIMAL(12,2),
     IN precio_compra DECIMAL(12,2),
     IN cantidad INT,
     IN talla VARCHAR(20),
-    IN descripcion VARCHAR(255),
     IN genero CHAR(1)
 )
 BEGIN
-    INSERT INTO Producto (id_proveedor, id_categoria, nombre_producto, imagenUrl, precio_venta, precio_compra, cantidad, talla, descripcion, genero)
-    VALUES (id_prov, id_cat, nombre, imagen_url,precio_venta, precio_compra, cantidad, talla, descripcion, genero);
+    INSERT INTO Producto (id_proveedor, id_categoria, nombre_producto, imagen, precio_venta, precio_compra, cantidad, talla, genero)
+    VALUES (id_prov, id_cat, nombre, imagen_text,precio_venta, precio_compra, cantidad, talla, genero);
 END //
 
 DELIMITER ;
@@ -254,7 +219,6 @@ CREATE PROCEDURE ActualizarProducto(
     IN nuevo_precio_compra DECIMAL(12, 2),
     IN nueva_cantidad INT,
     IN nueva_talla VARCHAR(20),
-    IN nueva_descripcion VARCHAR(255),
     IN nuevo_genero CHAR(1)
 )
 BEGIN
@@ -263,47 +227,54 @@ BEGIN
         id_proveedor = nuevo_id_proveedor,
         id_categoria = nuevo_id_categoria,
         nombre_producto = nuevo_nombre_producto,
-        imagenUrl = nuevo_imagen_producto,
+        imagen = nuevo_imagen_producto,
         precio_venta = nuevo_precio_venta,
         precio_compra = nuevo_precio_compra,
         cantidad = nueva_cantidad,
         talla = nueva_talla,
-        descripcion = nueva_descripcion,
         genero = nuevo_genero
     WHERE id_producto = id_producto;
 END //
 
 DELIMITER ;
 
--- Consultar Producto ----------------------------------------------
+-- Mostrar Producto ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarProductoPorID(
+CREATE PROCEDURE MostrarProducto(
     IN id_producto INT
 )
 BEGIN
-    SELECT *
-    FROM Producto
-    WHERE id_producto = id_producto;
-END //
-
-DELIMITER ;
-
--- Buscar Producto ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarProductoPorNombre(
-    IN nombre_producto VARCHAR(30)
-)
-BEGIN
-    SELECT *
-    FROM Producto
-    WHERE nombre_producto LIKE CONCAT('%', nombre_producto, '%');
+    SELECT 
+          p.id_producto,
+          p.nombre_producto,
+          p.imagen,
+          p.precio_venta,
+          p.precio_compra,
+          p.cantidad,
+          pr.empresa_proveedor,
+          c.nombre_categoria,
+          p.talla,
+          p.genero
+      FROM Producto p
+      INNER JOIN Proveedor pr ON p.id_proveedor = pr.id_proveedor
+      INNER JOIN Categoria c ON p.id_categoria = c.id_categoria;
 END //
 
 DELIMITER ;
 
 -- Eliminar Producto ----------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE EliminarProducto(
+    IN id_producto INT
+)
+BEGIN
+    DELETE FROM Producto
+    WHERE id_producto = id_producto;
+END //
+
+DELIMITER ;
 
 /*---------------------------------------------------------------------------------*/
 -- Insertar Categoria ----------------------------------------------
@@ -338,30 +309,16 @@ END //
 
 DELIMITER ;
 
--- Consultar Categoria ----------------------------------------------
+-- Mostrar Categoria ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarCategoria(
+CREATE PROCEDURE MostrarCategoria(
     IN id_categoria INT
 )
 BEGIN
     SELECT *
     FROM Categoria
     WHERE id_categoria = id_categoria;
-END //
-
-DELIMITER ;
-
--- Buscar Categoria ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarCategoriaPorNombre(
-    IN nombre_categoria VARCHAR(50)
-)
-BEGIN
-    SELECT *
-    FROM Categoria
-    WHERE nombre_categoria LIKE CONCAT('%', nombre_categoria, '%');
 END //
 
 DELIMITER ;
@@ -427,30 +384,16 @@ END //
 
 DELIMITER ;
 
--- Consultar Cita ----------------------------------------------
+-- Mostrar Cita ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarCitaPorID(
+CREATE PROCEDURE MostrarCita(
     IN id_cita INT
 )
 BEGIN
     SELECT *
     FROM Cita
     WHERE id_cita = id_cita;
-END //
-
-DELIMITER ;
-
--- Buscar Cita ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarCitaPorCliente(
-    IN id_cliente INT
-)
-BEGIN
-    SELECT *
-    FROM Cita
-    WHERE id_cliente = id_cliente;
 END //
 
 DELIMITER ;
@@ -510,30 +453,16 @@ END //
 
 DELIMITER ;
 
--- Consultar Compra ----------------------------------------------
+-- Mostrar Compra ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarCompraPorID(
+CREATE PROCEDURE MostrarCompra(
     IN id_compra INT
 )
 BEGIN
     SELECT *
     FROM Compra
     WHERE id_compra = id_compra;
-END //
-
-DELIMITER ;
-
--- Buscar Compra ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarComprasPorCliente(
-    IN id_cliente INT
-)
-BEGIN
-    SELECT *
-    FROM Compra
-    WHERE id_cliente = id_cliente;
 END //
 
 DELIMITER ;
@@ -581,10 +510,10 @@ END //
 
 DELIMITER ;
 
--- Consultar Tipo Pago ----------------------------------------------
+-- Mostrar Tipo Pago ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarTipoPagoPorID(
+CREATE PROCEDURE MostrarTipoPago(
     IN id_tipo_pago INT
 )
 BEGIN
@@ -595,20 +524,6 @@ END //
 
 DELIMITER ;
 
--- Buscar Tipo Pago ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarTipoPagoPorNombre(
-    IN nombre_tipo VARCHAR(65)
-)
-BEGIN
-    SELECT *
-    FROM Tipo_pago
-    WHERE tipo LIKE CONCAT('%', nombre_tipo, '%');
-END //
-
-DELIMITER ;
- 
 -- Eliminar Tipo pago ----------------------------------------------
 DELIMITER //
 
@@ -661,30 +576,16 @@ END //
 
 DELIMITER ;
 
--- Consultar Tipo entrega ----------------------------------------------
+-- Mostrar Tipo entrega ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarTipoEntregaPorID(
+CREATE PROCEDURE MOstrarTipoEntrega(
     IN id_entrega INT
 )
 BEGIN
     SELECT *
     FROM Tipo_entrega
     WHERE id_entrega = id_entrega;
-END //
-
-DELIMITER ;
-
--- Buscar Tipo entrega ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarTipoEntregaPorTipo(
-    IN tipo_entrega VARCHAR(50)
-)
-BEGIN
-    SELECT *
-    FROM Tipo_entrega
-    WHERE tipo_entrega LIKE CONCAT('%', tipo_entrega, '%');
 END //
 
 DELIMITER ;
@@ -769,30 +670,28 @@ END //
 
 DELIMITER ;
 
--- Consultar Resena ----------------------------------------------
+-- Mostrar Resena ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarResenaPorID(
+CREATE PROCEDURE MostrarResena(
     IN id_resena INT
 )
 BEGIN
-    SELECT *
-    FROM Resena
-    WHERE id_resena = id_resena;
-END //
-
-DELIMITER ;
-
--- Buscar Resena ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarResenasPorProducto(
-    IN id_producto INT
-)
-BEGIN
-    SELECT *
-    FROM Resena
-    WHERE id_producto = id_producto;
+    SELECT 
+		r.id_resena,
+        ct.nombre1_cliente,
+        ct.nombre2_cliente,
+        ct.apellido1_cliente,
+        ct.apellido2_cliente,
+        pr.nombre_producto,
+        pr.imagen,
+        r.calificacion,
+        r.comentario,
+        r.fecha_publicacion,
+        r.aprovacion
+    FROM Resena r
+    INNER JOIN Cliente ct ON r.id_cliente = ct.id_cliente
+	INNER JOIN Producto pr ON r.id_producto = pr.id_producto;
 END //
 
 DELIMITER ;
@@ -840,30 +739,16 @@ END //
 
 DELIMITER ;
 
--- Consultar Lista de deseo ----------------------------------------------
+-- Mostrar Lista de deseo ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarListaDeseosPorID(
+CREATE PROCEDURE MostrarListaDeseos(
     IN id_deseo INT
 )
 BEGIN
     SELECT *
     FROM ListaDeseos
     WHERE id_deseo = id_deseo;
-END //
-
-DELIMITER ;
-
--- Buscar Lista de deseo ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarListasDeseosPorCliente(
-    IN id_cliente INT
-)
-BEGIN
-    SELECT *
-    FROM ListaDeseos
-    WHERE id_cliente = id_cliente;
 END //
 
 DELIMITER ;
@@ -896,48 +781,16 @@ END //
 
 DELIMITER ;
 
--- Actualizar Lista detalle ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE ActualizarDetalleListaDeseos(
-    IN id_listadetalle INT,
-    IN nuevo_id_producto INT,
-    IN nuevo_id_deseo INT
-)
-BEGIN
-    UPDATE ListaDetalle
-    SET
-        id_producto = nuevo_id_producto,
-        id_deseo = nuevo_id_deseo
-    WHERE id_listadetalle = id_listadetalle;
-END //
-
-DELIMITER ;
-
 -- OCnsultar Lista detalle ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarDetalleListaDeseosPorID(
+CREATE PROCEDURE MostrarDetalleListaDeseos(
     IN id_listadetalle INT
 )
 BEGIN
     SELECT *
     FROM ListaDetalle
     WHERE id_listadetalle = id_listadetalle;
-END //
-
-DELIMITER ;
-
--- Buscar Lista detalle ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarDetalleListaDeseosPorListaDeseos(
-    IN id_deseo INT
-)
-BEGIN
-    SELECT *
-    FROM ListaDetalle
-    WHERE id_deseo = id_deseo;
 END //
 
 DELIMITER ;
@@ -994,27 +847,13 @@ DELIMITER ;
 -- Consultar Proveedor ----------------------------------------------
 DELIMITER //
 
-CREATE PROCEDURE ConsultarProveedorPorID(
+CREATE PROCEDURE MostrarProveedor(
     IN id_proveedor INT
 )
 BEGIN
     SELECT *
     FROM Proveedor
     WHERE id_proveedor = id_proveedor;
-END //
-
-DELIMITER ;
-
--- Buscar Proveedor ----------------------------------------------
-DELIMITER //
-
-CREATE PROCEDURE BuscarProveedoresPorNombreEmpresa(
-    IN nombre_empresa VARCHAR(60)
-)
-BEGIN
-    SELECT *
-    FROM Proveedor
-    WHERE empresa_proveedor LIKE CONCAT('%', nombre_empresa, '%');
 END //
 
 DELIMITER ;

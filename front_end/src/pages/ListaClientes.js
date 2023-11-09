@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Container, Card, Row, Col, Form, Modal, FloatingLabel } from 'react-bootstrap';
 import Header from '../components/Header';
+import { FaTrashCan, FaPencil } from 'react-icons/fa6';
 
-function ListaCliente() {
+function ListaCliente({ rol }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [clientes, setClientes] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -140,9 +141,9 @@ function ListaCliente() {
 
   return (
     <div>
-      <Header />
+     <Header rol={rol}/>
 
-      <Card className="m-3">
+      <Card className="margen-contenedor">
         <Card.Body>
           <Card.Title className="mb-3">Listado de Clientes</Card.Title>
 
@@ -187,8 +188,8 @@ function ListaCliente() {
                   <td>{cliente.email_cliente}</td>
                   <td>{cliente.contrasena_cliente}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(cliente)}>Actualizar</Button>
-                    <Button variant="danger" onClick={() => handleDelete(cliente.id_cliente)}>Eliminar</Button>
+                    <Button variant="primary" onClick={() => openModal(cliente)}><FaPencil/></Button>
+                    <Button variant="danger" onClick={() => handleDelete(cliente.id_cliente)}><FaTrashCan/></Button>
                   </td>
                 </tr>
               ))}

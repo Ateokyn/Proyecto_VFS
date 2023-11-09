@@ -1,20 +1,46 @@
 .navbar-color {
-    background-color: #0e3ad8; /* Color de fondo personalizado */
-  }
-  
-  .link-unstyled {
-    text-decoration: none; /* Elimina el subrayado */
-    color: inherit; /* Usa el color heredado (generalmente, el color predeterminado) */
-  }
-  
-  .center-button {
-    text-align: center;
-  }
-  
-.title {
-  font-size: 36px; /* Tamaño de fuente */
-  color: #ff3366; /* Color del texto */
-  text-align: center; /* Alineación centrada */
-  margin-bottom: 20px; /* Margen inferior para separar del contenido */
-  /* Agrega más estilos según tus preferencias */
+  background-color: #d81c0e; /* Color de fondo personalizado */
+}
+
+.link-unstyled {
+  text-decoration: none; /* Elimina el subrayado */
+  color: inherit; /* Usa el color heredado (generalmente, el color predeterminado) */
+}
+
+.center-button {
+  text-align: center;
+}
+
+.margen-contenedor {
+  margin-top: 80px;
+}
+.input-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-icon {
+  width: 10em; /* Ajusta el valor según el tamaño deseado */
+  height: 10em; /* Ajusta el valor según el tamaño deseado (igual al valor de width) */
+}
+
+
+
+.input-container input {
+  flex: 1; /* El input se expandirá para llenar el espacio disponible */
+  padding-right: 40px; /* Ajusta el valor según el espacio que desees para el icono a la derecha */
+  border: 1px solid #ccc; /* Puedes ajustar el estilo del borde según tus necesidades */
+}
+
+.search-button {
+  position: absolute;
+  right: 5px; /* Ajusta la posición del icono a la derecha */
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
 }

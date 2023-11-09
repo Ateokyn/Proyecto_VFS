@@ -30,7 +30,7 @@ const Login = ({ setRol }) => {
         const { rol } = await response.json();
   
         setRol(rol); // Actualiza el estado del rol solo si las credenciales son correctas
-        navigate('/Inicio');
+        navigate('/home');
       } else {
         console.log('Credenciales incorrectas');
         alert('¡Credenciales incorrectas!');
@@ -64,7 +64,7 @@ const Login = ({ setRol }) => {
                     <FloatingLabel controlId="contrasena" label="Ingrese su contraseña">
                       <Form.Control
                         placeholder="Ingrese su contraseña"
-                        type="text"
+                        type="password"
                         value={contrasena}
                         onChange={(e) => setContrasena(e.target.value)}
                       />

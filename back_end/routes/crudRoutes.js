@@ -15,30 +15,31 @@ const upload = multer({ storage: storage });
 
 module.exports = (db) => {
 
-  // Ruta para verificar las credenciales y obtener el rol del usuario
-  router.post('/login', (req, res) => {
-    const { nombre_Usuario, contrasena } = req.body;
+// Ruta para verificar las credenciales y obtener el rol del usuario
+router.post('/login', (req, res) => {
+  const { nombre_Usuario, contrasena } = req.body;
 
-    if (!nombre_Usuario || !contrasena) {
-      return res.status(400).json({ error: 'Nombre de usuario y contraseña son obligatorios' });
+  if (!nombre_Usuario || !contrasena) {
+    return res.status(400).json({ error: 'Nombre de usuario y contraseña son obligatorios' });
+  }
+
+  // Realizar la consulta para verificar las credenciales en la base de datos
+  const sql = 'SELECT rol FROM usuario WHERE nombre_Usuario = ? AND contrasena = ?';
+  db.query(sql, [nombre_Usuario, contrasena], (err, result) => {
+    if (err) {
+      console.error('Error al verificar credenciales:', err);
+      return res.status(500).json({ error: 'Error al verificar credenciales' });
     }
 
-    // Realizar la consulta para verificar las credenciales en la base de datos
-    const sql = `SELECT rol FROM Usuario WHERE nombre_Usuario = ? AND contrasena = ?`;
-    db.query(sql, [nombre_Usuario, contrasena], (err, result) => {
-      if (err) {
-        console.error('Error al verificar credenciales:', err);
-        return res.status(500).json({ error: 'Error al verificar credenciales' });
-      }
-
-      if (result.length === 1) {
-        const { rol } = result[0];
-        res.json({ rol }); // Devolver el rol si las credenciales son correctas
-      } else {
-        res.status(401).json({ error: 'Credenciales incorrectas' });
-      }
-    });
+    if (result.length === 1) {
+      const { rol } = result[0];
+      res.json({ rol }); // Devolver el rol si las credenciales son correctas
+    } else {
+      res.status(401).json({ error: 'Credenciales incorrectas' });
+    }
   });
+});
+
 
   /* Crud Cliente Inicio */
 
@@ -223,14 +224,16 @@ module.exports = (db) => {
     const sql = `
       SELECT 
           p.id_producto,
+          pr.id_proveedor,
+          pr.empresa_proveedor,
+          c.id_categoria,
+          c.nombre_categoria,
           p.nombre_producto,
+          p.imagen,
           p.precio_venta,
           p.precio_compra,
           p.cantidad,
-          pr.empresa_proveedor,
-          c.nombre_categoria,
           p.talla,
-          p.descripcion,
           p.genero
       FROM Producto p
       INNER JOIN Proveedor pr ON p.id_proveedor = pr.id_proveedor
@@ -248,48 +251,45 @@ module.exports = (db) => {
     });
   });
 
-// Ruta para guardar un producto con imagen
-router.post('/create_producto', upload.single('imagen'), (req, res) => {
-  const { id_proveedor, id_categoria, nombre_producto, precio_venta, precio_compra, cantidad, talla, descripcion, genero } = req.body;
+  // Ruta para guardar un producto con imagen
+  router.post('/create_producto', (req, res) => {
+    const { id_proveedor, id_categoria, nombre_producto, imagen, precio_venta, precio_compra, cantidad, talla, genero } = req.body;
 
-  if (!nombre_producto || !precio_venta || !precio_compra || !cantidad || !talla || !descripcion || !genero) {
-    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
-  }
-
-  const imagenUrl = `/uploads/${req.file.filename}`;
-  console.log(imagenUrl);
-
-  // Insertar el producto en la base de datos, incluyendo la URL de la imagen
-  const productQuery = 'INSERT INTO Producto (id_proveedor, id_categoria, nombre_producto, imagenUrl, precio_venta, precio_compra, cantidad, talla, descripcion, genero) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  const productValues = [id_proveedor, id_categoria, nombre_producto, imagenUrl, precio_venta, precio_compra, cantidad, talla, descripcion, genero];
-
-  db.query(productQuery, productValues, (productErr, productResult) => {
-    if (productErr) {
-      console.error('Error al insertar el producto:', productErr);
-      res.status(500).json({ error: 'Error al insertar el producto' });
-    } else {
-      res.status(201).json({ message: 'Registro exitoso.' });
+    if (!nombre_producto || !imagen || !precio_venta || !precio_compra || !cantidad || !talla || !genero) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
+
+    // Insertar el producto en la base de datos, incluyendo la URL de la imagen
+    const productQuery = 'INSERT INTO Producto (id_proveedor, id_categoria, nombre_producto, imagen, precio_venta, precio_compra, cantidad, talla, genero) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const productValues = [id_proveedor, id_categoria, nombre_producto, imagen, precio_venta, precio_compra, cantidad, talla, genero];
+
+    db.query(productQuery, productValues, (productErr, productResult) => {
+      if (productErr) {
+        console.error('Error al insertar el producto:', productErr);
+        res.status(500).json({ error: 'Error al insertar el producto' });
+      } else {
+        res.status(201).json({ message: 'Registro exitoso.' });
+      }
+    });
   });
-});
 
   //Actualizar
   router.put('/update_producto/:id_producto', (req, res) => {
     const id_producto = req.params.id_producto;
 
-    const { id_proveedor, id_categoria, nombre_producto, precio_venta, precio_compra, cantidad, talla, descripcion, genero } = req.body;
+    const { id_proveedor, id_categoria, nombre_producto, imagen, precio_venta, precio_compra, cantidad, talla, genero } = req.body;
 
-    if (!id_proveedor || !id_categoria || !nombre_producto || !precio_venta || !precio_compra || !cantidad || !talla || !descripcion || !genero) {
+    if (!id_proveedor || !id_categoria || !nombre_producto || !imagen || !precio_venta || !precio_compra || !cantidad || !talla || !genero) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
 
     const sql = `
         UPDATE Producto
-        SET id_proveedor = ?, id_categoria = ?, nombre_producto = ?, precio_venta = ?, precio_compra = ?, cantidad = ?, talla = ?, descripcion = ?, genero = ?
+        SET id_proveedor = ?, id_categoria = ?, nombre_producto = ?, imagen = ?, precio_venta = ?, precio_compra = ?, cantidad = ?, talla = ?, genero = ?
         WHERE id_producto = ?
       `;
 
-    const values = [id_proveedor, id_categoria, nombre_producto, precio_venta, precio_compra, cantidad, talla, descripcion, genero, id_producto];
+    const values = [id_proveedor, id_categoria, nombre_producto, imagen, precio_venta, precio_compra, cantidad, talla, genero, id_producto];
 
     // Ejecuta la consulta
     db.query(sql, values, (err, result) => {
@@ -337,20 +337,20 @@ router.post('/create_producto', upload.single('imagen'), (req, res) => {
         res.status(200).json(result);
       }
     });
-  }); 
+  });
 
   router.post('/create_categoria', (req, res) => {
     // Recibe los datos del nuevo registro desde el cuerpo de la solicitud (req.body)
     const { nombre_categoria, descripcion_categoria } = req.body;
-  
+
     // Verifica si se proporcionaron los datos necesarios
     if (!nombre_categoria || !descripcion_categoria) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
-  
+
     // Nombre del procedimiento almacenado
     const storedProcedure = 'InsertarCategoria';
-  
+
     // Llama al procedimiento almacenado
     db.query(
       `CALL ${storedProcedure}(?, ?)`,
@@ -420,7 +420,20 @@ router.post('/create_producto', upload.single('imagen'), (req, res) => {
   // Leer
   router.get('/read_cita', (req, res) => {
 
-    const sql = 'SELECT * FROM Cita';
+    const sql = `
+    SELECT 
+    c.id_cita,
+    ct.nombre1_cliente,
+    ed.nombre1_empleado,
+    c.tipo_servicio,
+    c.fecha_cita,
+    c.hora_cita,
+    c.estado_cita,
+    c.comentario
+FROM Cita c
+INNER JOIN Cliente ct ON c.id_cliente = ct.id_cliente
+INNER JOIN Empleado ed ON c.id_empleado = ed.id_empleado;
+`;
 
     // Ejecutar la consulta
     db.query(sql, (err, result) => {
@@ -441,7 +454,7 @@ router.post('/create_producto', upload.single('imagen'), (req, res) => {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
 
-    const sql = `INSERT INTO Cita (id_cliente, id_empleado, tipo_servicio, fecha_cita, hora_cita, estado_cita, comentario) VALUES (?, ?, ?, ?, ? ,?)`;
+    const sql = `INSERT INTO Cita (id_cliente, id_empleado, tipo_servicio, fecha_cita, hora_cita, estado_cita, comentario) VALUES (?, ?, ?, ?, ? ,?,?)`;
     const values = [id_cliente, id_empleado, tipo_servicio, fecha_cita, hora_cita, estado_cita, comentario];
 
     // Ejecuta la consulta
@@ -682,7 +695,7 @@ router.post('/create_producto', upload.single('imagen'), (req, res) => {
   /* Crud Tipo entrega Inicio */
 
   // Leer
-  router.get('/read_tipo_entrega', (req, res) => {
+  router.get('/read_entrega', (req, res) => {
 
     const sql = 'SELECT * FROM Tipo_entrega';
 
@@ -857,10 +870,26 @@ router.post('/create_producto', upload.single('imagen'), (req, res) => {
 
   /* Crud Reseñas Inicio */
 
+  
   // Leer
   router.get('/read_resena', (req, res) => {
 
-    const sql = 'SELECT * FROM Resena';
+    const sql = `
+          SELECT 
+	              r.id_resena,
+                ct.id_cliente,
+                ct.nombre1_cliente,
+                ct.apellido1_cliente,
+                pr.nombre_producto,
+                pr.imagen,
+                r.calificacion,
+                r.comentario,
+                r.fecha_publicacion,
+                r.aprovacion
+        FROM Resena r
+        INNER JOIN Cliente ct ON r.id_cliente = ct.id_cliente
+        INNER JOIN Producto pr ON r.id_producto = pr.id_producto;
+    `;
 
     // Ejecutar la consulta
     db.query(sql, (err, result) => {
@@ -877,7 +906,7 @@ router.post('/create_producto', upload.single('imagen'), (req, res) => {
   router.post('/create_resena', (req, res) => {
     const { id_cliente, id_producto, calificacion, comentario, fecha_publicacion, aprovacion } = req.body;
 
-    if (!id_cliente || !id_producto || !calificacion || !comentario || !fecha_publicacion || !aprovacion) {
+    if (!id_cliente || !id_producto || !calificacion || !comentario || !aprovacion) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' });
     }
 
@@ -888,12 +917,13 @@ router.post('/create_producto', upload.single('imagen'), (req, res) => {
     db.query(sql, values, (err, result) => {
       if (err) {
         console.error('Error al insertar registro:', err);
-        res.status(500).json({ error: 'Error al insertar registro' });
+        res.status(500).json({ error: 'Error al insertar la reseña' });
       } else {
         res.status(201).json({ message: 'Registro exitoso.' });
       }
     });
   });
+
 
   //Actualizar
   router.put('/update_resena/:id_resena', (req, res) => {

@@ -1,5 +1,3 @@
-ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY '@kekodroid';
-
 CREATE DATABASE database_vfs;
 USE database_vfs;
 
@@ -18,33 +16,14 @@ CREATE USER 'GiselaPaola'@'localhost' IDENTIFIED BY 'correcto';
 CREATE USER 'KennyTellez'@'localhost' IDENTIFIED BY 'incorrecto';
 -- DROP USER 'KennyTellez'@'localhost';
 
--- Asignar rol a usuario
-GRANT 'desarrollador' TO 'GiselaPaola'@'localhost';
-GRANT 'desarrollador' TO 'KennyTellez'@'localhost';
+-- Privilegios
+GRANT ALL PRIVILEGES ON database_vfs.* TO 'KennyTellez'@'localhost';
+GRANT SUPER ON *.* TO 'KennyTellez'@'localhost';
+FLUSH PRIVILEGES;
 
-SHOW GRANTS FOR 'GiselaPaola'@'localhost';
-SHOW GRANTS FOR 'GiselaPaola'@'localhost' using 'desarrollador';
-
-SHOW GRANTS FOR 'KennyTellez'@'localhost';
-SHOW GRANTS FOR 'KennyTellez'@'localhost' using 'desarrollador';
-
-SET DEFAULT ROLE  ALL TO
-'GiselaPaola'@'localhost',
-'KennyTellez'@'localhost';
--- Crear rol
-CREATE ROLE 'desarrollador';
--- DROP ROLE 'desarrollador';
-
--- Asignar permisos
-GRANT ALL ON database_vfs.* TO 'desarrollador';
-
--- Rol Gisela Paola
-CREATE USER 'GiselaPaola'@'localhost' IDENTIFIED BY 'correcto';
--- DROP USER 'GiselaPaola'@'localhost';
-
--- Rol de Kenny Tellez
-CREATE USER 'KennyTellez'@'localhost' IDENTIFIED BY 'incorrecto';
--- DROP USER 'KennyTellez'@'localhost';
+GRANT ALL PRIVILEGES ON database_vfs.* TO 'GiselaPaola'@'localhost';
+GRANT SUPER ON *.* TO 'GiselaPaola'@'localhost';
+FLUSH PRIVILEGES;
 
 -- Asignar rol a usuario
 GRANT 'desarrollador' TO 'GiselaPaola'@'localhost';
@@ -62,6 +41,18 @@ SET DEFAULT ROLE  ALL TO
 
 SELECT CURRENT_ROLE();
 
+CREATE TABLE Usuario	 (
+  id_Usuario Int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  nombre_Usuario Varchar(30) NOT NULL,
+  contrasena Varchar(16) NOT NULL,
+  rol Varchar(20) NOT NULL
+);
+
+INSERT INTO Usuario (nombre_Usuario, contrasena, rol)  VALUES ('KennyTellez','incorrecto', 'admin');
+INSERT INTO Usuario (nombre_Usuario, contrasena, rol)  VALUES ('GiselaPaola','correcto', 'vendedor');
+INSERT INTO Usuario (nombre_Usuario, contrasena, rol)  VALUES ('KennyPaolo','incorrecto1', 'cliente');
+SELECT * FROM Usuario;
+
 CREATE TABLE `Cliente` (
   `id_cliente` integer AUTO_INCREMENT PRIMARY KEY,
   `nombre1_cliente` varchar(15) NOT NULL,
@@ -71,7 +62,8 @@ CREATE TABLE `Cliente` (
   `fechanac_cliente` date NOT NULL,
   `telefono_cliente` varchar(9) NOT NULL,
   `email_cliente` varchar(255) NOT NULL,
-  `contrasena_cliente` varchar(255) NOT NULL
+  `contrasena_cliente` varchar(50) NOT NULL,
+  `rol` Varchar(20) NOT NULL
 );
 
 CREATE TABLE `Empleado` (
@@ -82,40 +74,40 @@ CREATE TABLE `Empleado` (
   `apellido2_empleado` varchar(15) NULL,
   `especialidad_empleado` varchar(50) NOT NULL,
   `telefono_empleado` varchar(9) NOT NULL,
-  `email_empleado` varchar(255) NOT NULL,
-  `contrasena_empleado` varchar(255) NULL
+  `email_empleado` varchar(50) NOT NULL,
+  `contrasena_empleado` varchar(16) NULL,
+  `rol` Varchar(20) NOT NULL
 );
 
-CREATE TABLE `Producto` (
-  `id_producto` integer AUTO_INCREMENT PRIMARY KEY,
-  `id_proveedor` integer NOT NULL,
-  `id_categoria` integer NOT NULL,
-  `nombre_producto` varchar(30) NOT NULL,
-  `imagenUrl` blob NULL,
-  `precio_venta` decimal(12,2) NOT NULL,
-  `precio_compra` decimal(12,2) NOT NULL,
-  `cantidad` integer NOT NULL,
-  `talla` varchar(20) NOT NULL,
-  `descripcion` varchar(255) NULL,
-  `genero` char(1) NOT NULL
-);
+	CREATE TABLE `Producto` (
+	  `id_producto` integer AUTO_INCREMENT PRIMARY KEY,
+	  `id_proveedor` integer NOT NULL,
+	  `id_categoria` integer NOT NULL,
+	  `nombre_producto` varchar(30) NOT NULL,
+	  `imagen` LONGTEXT NULL,
+	  `precio_venta` decimal(12,2) NOT NULL,
+	  `precio_compra` decimal(12,2) NOT NULL,
+	  `cantidad` integer NOT NULL,
+	  `talla` varchar(20) NOT NULL,
+	  `genero` char(1) NOT NULL
+	);
 
-CREATE TABLE `Categoria`(
-	`id_categoria` integer AUTO_INCREMENT PRIMARY KEY,
-    `nombre_categoria` varchar(50) NOT NULL,
-    `descripcion_categoria` varchar (255) NULL
-);
+	CREATE TABLE `Categoria`(
+		`id_categoria` integer AUTO_INCREMENT PRIMARY KEY,
+		`nombre_categoria` varchar(50) NOT NULL,
+		`descripcion_categoria` varchar (255) NULL
+	);
 
-CREATE TABLE `Cita` (
-  `id_cita` integer AUTO_INCREMENT PRIMARY KEY,
-  `id_cliente` integer NOT NULL,
-  `id_empleado` integer NOT NULL,
-  `tipo_servicio` varchar(100) NOT NULL,
-  `fecha_cita` date NOT NULL,
-  `hora_cita` time NOT NULL,
-  `estado_cita` boolean NOT NULL,
-  `comentario` varchar(255) NULL
-);
+	CREATE TABLE `Cita` (
+	  `id_cita` integer AUTO_INCREMENT PRIMARY KEY,
+	  `id_cliente` integer NOT NULL,
+	  `id_empleado` integer NOT NULL,
+	  `tipo_servicio` varchar(100) NOT NULL,
+	  `fecha_cita` date NOT NULL,
+	  `hora_cita` time NOT NULL,
+	  `estado_cita` boolean NOT NULL,
+	  `comentario` varchar(255) NULL
+	);
 
 CREATE TABLE `Compra` (
   `id_compra` integer AUTO_INCREMENT PRIMARY KEY,
@@ -221,3 +213,6 @@ ALTER TABLE `ListaDetalle` ADD CONSTRAINT `FK_ListaDetalle_Producto` FOREIGN KEY
 -- Relación entre ListaDeseos y Cliente
 ALTER TABLE `ListaDeseos` ADD CONSTRAINT `FK_ListaDeseos_Cliente` FOREIGN KEY (`id_cliente`) REFERENCES `Cliente` (`id_cliente`);
  
+ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY '@kekodroid';
+ALTER USER 'KennyTellez'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'incorrecto';
+ALTER USER 'GiselaPaola'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'correcto';
