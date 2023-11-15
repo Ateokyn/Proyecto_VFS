@@ -534,27 +534,82 @@ INNER JOIN Empleado ed ON c.id_empleado = ed.id_empleado;
     });
   });
 
-  // Crear
-  router.post('/create_compra', (req, res) => {
-    const { id_cliente, id_tipo_pago, id_entrega, fecha_compra, hora_compra } = req.body;
+// Ruta para registrar una venta con su detalle y tipo de entrega
+router.post('/create_venta_y_tipo_entrega', (req, res) => {
+  // Extraer datos de la solicitud
+  const { fecha_compra, hora_compra, id_cliente, id_empleado, detalles_compra, tipo_entrega, estado_entrega, direccion_entrega } = req.body;
 
-    if (!id_cliente || !id_tipo_pago || !id_entrega || !fecha_compra || !hora_compra) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+  // Comprobar si se proporcionaron todos los datos necesarios
+  if (!fecha_compra || !hora_compra || !id_cliente || !id_empleado || detalles_compra.length === 0 || !tipo_entrega || !estado_entrega || !direccion_entrega) {
+    return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+  }
+
+  // Iniciar la transacción
+  db.beginTransaction((err) => {
+    if (err) {
+      console.error('Error al iniciar la transacción:', err);
+      return res.status(500).json({ error: 'Error al iniciar la transacción' });
     }
 
-    const sql = `INSERT INTO Compra (id_cliente, id_tipo_pago, id_entrega, fecha_compra, hora_compra) VALUES (?, ?, ?, ?, ?)`;
-    const values = [id_cliente, id_tipo_pago, id_entrega, fecha_compra, hora_compra];
+    // Realizar la inserción del tipo de entrega
+    const sqlTipoEntrega = 'INSERT INTO Tipo_entrega (id_empleado, tipo_entrega, estado_entrega, direccion_entrega) VALUES (?, ?, ?, ?)';
+    const valuesTipoEntrega = [id_empleado, tipo_entrega, estado_entrega, direccion_entrega];
 
-    // Ejecuta la consulta
-    db.query(sql, values, (err, result) => {
+    db.query(sqlTipoEntrega, valuesTipoEntrega, (err, resultTipoEntrega) => {
       if (err) {
-        console.error('Error al insertar registro:', err);
-        res.status(500).json({ error: 'Error al insertar registro' });
+        db.rollback(() => {
+          console.error('Error al insertar tipo de entrega:', err);
+          res.status(500).json({ error: 'Error al insertar tipo de entrega' });
+        });
       } else {
-        res.status(201).json({ message: 'Registro exitoso.' });
+        const idTipoEntrega = resultTipoEntrega.insertId;
+
+        // Realizar la inserción de la compra
+        const sqlCompra = 'INSERT INTO Compra (fecha_compra, hora_compra, id_cliente, id_tipo_entrega) VALUES (?, ?, ?, ?)';
+        const valuesCompra = [fecha_compra, hora_compra, id_cliente, idTipoEntrega];
+
+        db.query(sqlCompra, valuesCompra, (err, resultCompra) => {
+          if (err) {
+            db.rollback(() => {
+              console.error('Error al insertar compra:', err);
+              res.status(500).json({ error: 'Error al insertar compra' });
+            });
+          } else {
+            const idCompra = resultCompra.insertId;
+
+            // Realizar la inserción del detalle de compra
+            const sqlDetalleCompra = 'INSERT INTO Detalle_compra (id_compra, id_producto, cantidad_compra) VALUES ?';
+            const valuesDetalleCompra = detalles_compra.map((detalle) => [idCompra, detalle.id_producto, detalle.cantidad_compra]);
+
+            db.query(sqlDetalleCompra, [valuesDetalleCompra], (err, resultDetalleCompra) => {
+              if (err) {
+                db.rollback(() => {
+                  console.error('Error al insertar detalle de compra:', err);
+                  res.status(500).json({ error: 'Error al insertar detalle de compra' });
+                });
+              } else {
+                // Confirmar la transacción
+                db.commit((err) => {
+                  if (err) {
+                    db.rollback(() => {
+                      console.error('Error al confirmar la transacción:', err);
+                      res.status(500).json({ error: 'Error al confirmar la transacción' });
+                    });
+                  } else {
+                    console.log('Transacción completada con éxito');
+                    res.status(201).json({ message: 'Tipo de entrega, compra y detalle de compra registrados con éxito' });
+                  }
+                });
+              }
+            });
+          }
+        });
       }
     });
   });
+});
+
+
 
   //Actualizar
   router.put('/update_compra/:id_compra', (req, res) => {

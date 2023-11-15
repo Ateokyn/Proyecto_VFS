@@ -9,7 +9,7 @@ const Login = ({ setRol }) => {
   const [contrasena, setContrasena] = useState('');
 
   const handleSubmit = async event => {
-    event.preventDefault();
+    event.preventDefault(); 
 
     // Objeto con los datos del formulario
     const formData = {
@@ -25,10 +25,10 @@ const Login = ({ setRol }) => {
         },
         body: JSON.stringify(formData)
       });
-
+  
       if (response.ok) {
         const { rol } = await response.json();
-
+  
         setRol(rol); // Actualiza el estado del rol solo si las credenciales son correctas
         navigate('/home');
       } else {
@@ -60,7 +60,6 @@ const Login = ({ setRol }) => {
                       />
                     </FloatingLabel>
                   </Col>
-
                   <Col sm="12" md="12" lg="12">
                     <FloatingLabel controlId="contrasena" label="Ingrese su contraseña">
                       <Form.Control

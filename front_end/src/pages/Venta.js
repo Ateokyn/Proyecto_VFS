@@ -27,6 +27,7 @@ function Venta({ rol }) {
                 console.error('Error al obtener las especialidades', error);
             });
     }, []);
+
     const [formData, setFormData] = useState({
         id_cliente: '',
         id_tipo_pago: '',
@@ -40,16 +41,19 @@ function Venta({ rol }) {
     const [empleados, setEmpleados] = useState([]);
     const [clientes, setClientes] = useState([]);
     const [productos, setProductos] = useState([]);
+    const [pagos, setPago] = useState([]);
 
     const [detalles_compra, setDetalles_compra] = useState([]);
 
     const [showClienteModal, setShowClienteModal] = useState(false);
     const [showEmpleadoModal, setShowEmpleadoModal] = useState(false);
     const [showProductoModal, setShowProductoModal] = useState(false);
+    const [showPagoModal, setShowPagoModal] = useState(false);
 
     const [selectedCliente, setSelectedCliente] = useState(null);
     const [selectedEmpleado, setSelectedEmpleado] = useState(null);
     const [selectedProducto, setSelectedProducto] = useState(null);
+    const [selectedPago, setSelectedPago] = useState(null);
 
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -63,6 +67,7 @@ function Venta({ rol }) {
             const nuevoDetalle = {
                 id_producto: selectedProducto.id_producto,
                 nombre_producto: selectedProducto.nombre_producto,
+                imagen: selectedProducto.imagen,
                 precio_venta: selectedProducto.precio_venta,
                 cantidad_compra: cantidad_compra
             };
@@ -99,6 +104,26 @@ function Venta({ rol }) {
         );
     });
 
+    const filteredProductos = productos.filter((producto) => {
+        // Convierte los valores de los campos a minúsculas para realizar una búsqueda insensible a mayúsculas y minúsculas
+        const id_producto = producto.id_producto;
+        const nombre_producto = producto.nombre_producto.toLowerCase();
+        const precio_venta = producto.precio_venta;
+        const talla = producto.talla.toLowerCase();
+        const genero = producto.genero.toLowerCase();
+        const cantidad = producto.cantidad;
+        const search = searchQuery.toLowerCase();
+
+        // Verifica si la cadena de búsqueda se encuentra en algún campo
+        return (
+            id_producto == (search) ||
+            nombre_producto.includes(search) ||
+            precio_venta.includes(search) ||
+            talla.includes(search) ||
+            genero.includes(search) ||
+            cantidad.includes(search)
+        );
+    });
 
     //Manejo de carga y selección de Clientes --------------------------------------
     const loadClientes = () => {
@@ -185,12 +210,57 @@ function Venta({ rol }) {
         closeProductoModal();
     };
 
+    //Manejo de carga y selección de Empleados --------------------------------------
+    const loadPagos = () => {
+        fetch('http://localhost:5000/crud/read_tipo_pago')
+            .then((response) => response.json())
+            .then((data) => setPago(data))
+            .catch((error) => console.error('Error al obtener los empleados:', error));
+    };
+
+    //Control de apertura de modal de Empleados
+    const openPagoModal = () => {
+        setShowPagoModal(true);
+    };
+
+    //Control de clierre de modal de Empleados
+    const closePagoModal = () => {
+        setShowPagoModal(false);
+    };
+
+    //Actualización de valor de variable de estado de Empleado selecionado
+    const selectPago = (pago) => {
+        setSelectedPago(pago);
+        setFormData({
+            ...formData,
+            id_tipo_pago: pago.id_tipo_pago,
+        });
+        closePagoModal();
+    };
+
     //Carga de datos de Clientes, Empleados y Productos
     useEffect(() => {
         loadClientes();
         loadEmpleados();
         loadProductos();
+        loadPagos();
     }, []);
+
+    const handleImagenChange = (event) => {
+        const file = event.target.files[0]; // Obtener el primer archivo seleccionado
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            const base64String = reader.result; // Obtener la imagen en formato base64
+            setFormData({
+                ...formData,
+                imagen: base64String
+            });
+        };
+        if (file) {
+            reader.readAsDataURL(file); // Lee el contenido del archivo como base64
+        }
+    };
 
 
     const registrarVentaYTipoEntrega = async (e) => {
@@ -279,13 +349,99 @@ function Venta({ rol }) {
                             <Row className="g-3">
 
                                 <Col sm="12" md="4" lg="4">
-                                    <FloatingLabel controlId="cliente" label="Cliente">
+                                    <FloatingLabel controlId="Tipopago" label="Tipo pago">
                                         <Form.Control
                                             type="text"
+                                            placeholder="Seleccionar metodo de pago"
+                                            name="Tipopago"
+                                            value={selectedPago ? selectedPago.tipo : ''}
+                                            readOnly
+                                        />
+                                        <div className="button-container">
+                                            <Button className="search-button" variant="outline-primary" onClick={openPagoModal}>
+                                                <FaSearch />
+                                            </Button>
+                                        </div>
+                                    </FloatingLabel>
+                                </Col>
+
+                                <Col sm="12" md="2" lg="4">
+                                    <FloatingLabel controlId="id_empleado" label="Empleado">
+                                        <Form.Select
+                                            aria-label="id_empleado"
+                                            value={id_empleado}
+                                            onChange={(e) => setId_empleado(e.target.value)}
+                                        >
+                                            <option>Seleccione un empleado</option>
+                                            {id_empleados.map((empleado) => (
+                                                <option key={empleado.id_empleado} value={empleado.id_empleado}>
+                                                    {empleado.nombre1_empleado + ' '}
+                                                    {empleado.nombre2_empleado + ' '}
+                                                    {empleado.apellido1_empleado + ' '}
+                                                    {empleado.apellido2_empleado}
+                                                </option>
+                                            ))}
+                                        </Form.Select>
+                                    </FloatingLabel>
+                                </Col>
+
+                                <Col sm="12" md="6" lg="4">
+                                    <FloatingLabel controlId="tipo_entrega" label="Tipo entrega">
+                                        <Form.Select
+                                            aria-label="tipo_entrega"
+                                            value={tipo_entrega}
+                                            onChange={(e) => setTipo_entrega(e.target.value)}
+                                        >
+                                            <option>Seleccione el tipo de entrega</option>
+                                            <option value="Entrega a domicilio">Entrega a domicilio</option>
+                                            <option value="Entrega en tienda">Entrega en tienda</option>
+                                            <option value="Entrega en punto de recogida">Entrega en punto de recogida</option>
+                                            <option value="Entrega express">Entrega express</option>
+                                            <option value="Entrega programada">Entrega programada</option>
+                                        </Form.Select>
+                                    </FloatingLabel>
+                                </Col>
+
+                                <Col sm="12" md="6" lg="4">
+                                    <FloatingLabel controlId="estado_entrega" label="Estado entrega">
+                                        <Form.Select
+                                            aria-label="estado_entrega"
+                                            value={estado_entrega}
+                                            onChange={(e) => setEstado_entrega(e.target.value)}
+                                        >
+                                            <option>Estado entrega</option>
+                                            <option value="Pendiente">Pendiente</option>
+                                            <option value="Proceso de entrega">Proceso de entrega</option>
+                                            <option value="Entregado">Entregado</option>
+                                        </Form.Select>
+                                    </FloatingLabel>
+                                </Col>
+
+                                <Col sm="12" md="6" lg="6">
+                                    <FloatingLabel controlId="direccion_entrega" label="Direccion entrega">
+                                        <Form.Control
+                                            as="textarea"
+                                            className="auto-expand-textarea" // Aplica la clase personalizada aquí
+                                            placeholder="Ingrese la direccion de entrega"
+                                            value={direccion_entrega}
+                                            onChange={(e) => {
+                                                setDireccion_entrega(e.target.value);
+                                                e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
+                                                e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
+                                            }}
+                                        />
+                                    </FloatingLabel>
+                                </Col>
+
+                                <Col sm="12" md="4" lg="4">
+                                    <FloatingLabel controlId="cliente" label="Cliente">
+                                        <Form.Control
+                                            ttype="text"
                                             placeholder="Seleccionar Cliente"
                                             name="cliente"
-                                            value={selectedCliente ? selectedCliente.nombre1_cliente : ''}
+                                            value={selectedCliente ? `${selectedCliente.nombre1_cliente} ${selectedCliente.nombre2_cliente} ${selectedCliente.apellido1_cliente} ${selectedCliente.apellido2_cliente}` : ''}
                                             readOnly
+
                                         />
                                         <div className="button-container">
                                             <Button className="search-button" variant="outline-primary" onClick={openClienteModal}>
@@ -307,7 +463,7 @@ function Venta({ rol }) {
                                 </Col>
 
                                 <Col sm="12" md="4" lg="4">
-                                    <FloatingLabel controlId="hora_compra" label="Fecha">
+                                    <FloatingLabel controlId="hora_compra" label="Hora">
                                         <Form.Control
                                             type="time"
                                             placeholder="Seleccione la hora compra"
@@ -351,6 +507,8 @@ function Venta({ rol }) {
                                     </Button>
                                 </Col>
 
+                                <div className="divider"></div>
+
                                 <Col sm="12" md="1" lg="12">
                                     <Card className="global-margin-top">
                                         <Card.Body>
@@ -360,6 +518,7 @@ function Venta({ rol }) {
                                                     <tr>
                                                         <th>ID</th>
                                                         <th>Nombre</th>
+                                                        <th>Imagen</th>
                                                         <th>Precio</th>
                                                         <th>Cantidad</th>
                                                         <th>Subtotal</th>
@@ -371,6 +530,10 @@ function Venta({ rol }) {
                                                         <tr key={detalle.id_producto}>
                                                             <td>{detalle.id_producto}</td>
                                                             <td>{detalle.nombre_producto}</td>
+                                                            <td>
+                                                                {/* Muestra la imagen en base64 */}
+                                                                <img src={detalle.imagen} alt={detalle.nombre} style={{ width: '100px' }} />
+                                                            </td>
                                                             <td>{detalle.precio_venta}</td>
                                                             <td>{detalle.cantidad_compra}</td>
                                                             <td>{detalle.cantidad_compra * detalle.precio_venta}</td>
@@ -391,85 +554,10 @@ function Venta({ rol }) {
                                     </Card>
                                 </Col>
 
-                                <Container>
-                                    <Card className="margen-contenedor">
-                                        <Card.Body>
-                                            <Card.Title>Datos para la entrega</Card.Title>
-                                            <Row className="g-3">
-
-                                                <Col sm="12" md="6" lg="4">
-                                                    <FloatingLabel controlId="id_empleado" label="Empleado">
-                                                        <Form.Select
-                                                            aria-label="id_empleado"
-                                                            value={id_empleado}
-                                                            onChange={(e) => setId_empleado(e.target.value)}
-                                                        >
-                                                            <option>Seleccione un empleado</option>
-                                                            {id_empleados.map((empleado) => (
-                                                                <option key={empleado.id_empleado} value={empleado.id_empleado}>
-                                                                    {empleado.nombre1_empleado + ' '}
-                                                                    {empleado.nombre2_empleado + ' '}
-                                                                    {empleado.apellido1_empleado + ' '}
-                                                                    {empleado.apellido2_empleado}
-                                                                </option>
-                                                            ))}
-                                                        </Form.Select>
-                                                    </FloatingLabel>
-                                                </Col>
-
-                                                <Col sm="12" md="6" lg="4">
-                                                    <FloatingLabel controlId="tipo_entrega" label="Tipo entrega">
-                                                        <Form.Select
-                                                            aria-label="tipo_entrega"
-                                                            value={tipo_entrega}
-                                                            onChange={(e) => setTipo_entrega(e.target.value)}
-                                                        >
-                                                            <option>Seleccione el tipo de entrega</option>
-                                                            <option value="Entrega a domicilio">Entrega a domicilio</option>
-                                                            <option value="Entrega en tienda">Entrega en tienda</option>
-                                                            <option value="Entrega en punto de recogida">Entrega en punto de recogida</option>
-                                                            <option value="Entrega express">Entrega express</option>
-                                                            <option value="Entrega programada">Entrega programada</option>
-                                                        </Form.Select>
-                                                    </FloatingLabel>
-                                                </Col>
-
-                                                <Col sm="12" md="6" lg="4">
-                                                    <FloatingLabel controlId="estado_entrega" label="Estado entrega">
-                                                        <Form.Select
-                                                            aria-label="estado_entrega"
-                                                            value={estado_entrega}
-                                                            onChange={(e) => setEstado_entrega(e.target.value)}
-                                                        >
-                                                            <option>Estado entrega</option>
-                                                            <option value="Pendiente">Pendiente</option>
-                                                            <option value="Proceso de entrega">Proceso de entrega</option>
-                                                            <option value="Entregado">Entregado</option>
-                                                        </Form.Select>
-                                                    </FloatingLabel>
-                                                </Col>
-
-                                                <Col sm="12" md="6" lg="6">
-                                                    <FloatingLabel controlId="direccion_entrega" label="Direccion entrega">
-                                                        <Form.Control
-                                                            as="textarea"
-                                                            className="auto-expand-textarea" // Aplica la clase personalizada aquí
-                                                            placeholder="Ingrese la direccion de entrega"
-                                                            value={direccion_entrega}
-                                                            onChange={(e) => {
-                                                                setDireccion_entrega(e.target.value);
-                                                                e.target.style.height = 'auto'; // Restablece la altura a 'auto' para calcular la nueva altura
-                                                                e.target.style.height = `${e.target.scrollHeight}px`; // Ajusta la altura automáticamente
-                                                            }}
-                                                        />
-                                                    </FloatingLabel>
-                                                </Col>
-                                            </Row>
-                                        </Card.Body>
-                                    </Card>
-                                </Container>
-
                             </Row>
+
+                            <div className="divider"></div>
+
                             <div className="center-button">
                                 <Button onClick={registrarVentaYTipoEntrega} variant="primary" size="lg">
                                     Registrar
@@ -481,7 +569,7 @@ function Venta({ rol }) {
                 </Card>
             </Container>
 
-            <Modal show={showClienteModal} onHide={closeClienteModal} centered scrollable size='md'>
+            <Modal show={showClienteModal} onHide={closeClienteModal} centered scrollable size='lg'>
                 <Modal.Header closeButton>
                     <Modal.Title>Seleccionar Cliente</Modal.Title>
                 </Modal.Header>
@@ -502,6 +590,7 @@ function Venta({ rol }) {
                     <Table striped bordered hover responsive>
                         <thead>
                             <tr>
+                                <th>Id</th>
                                 <th>Primer nombre</th>
                                 <th>Segundo nombre</th>
                                 <th>Primer apellido</th>
@@ -511,6 +600,7 @@ function Venta({ rol }) {
                         <tbody>
                             {filteredClientes.map((cliente) => (
                                 <tr key={cliente.id_cliente} onClick={() => selectCliente(cliente)}>
+                                    <td>{cliente.id_cliente}</td>
                                     <td>{cliente.nombre1_cliente}</td>
                                     <td>{cliente.nombre2_cliente}</td>
                                     <td>{cliente.apellido1_cliente}</td>
@@ -539,14 +629,64 @@ function Venta({ rol }) {
                 </Modal.Body>
             </Modal>
 
-            <Modal show={showProductoModal} onHide={closeProductoModal} centered>
+            <Modal show={showProductoModal} onHide={closeProductoModal} centered scrollable size='lg'>
                 <Modal.Header closeButton>
-                    <Modal.Title>Seleccionar Producto</Modal.Title>
+                    <Modal.Title>Seleccionar producto</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {productos.map((producto) => (
-                        <div className="Seleccion" key={producto.id_producto} onClick={() => selectProducto(producto)}>
-                            {producto.nombre_producto}
+                    <Row className="mb-3">
+                        <Col sm="12" md="12" lg="12">
+                            <FloatingLabel controlId="search" label="Buscar">
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Buscar"
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
+                                />
+                            </FloatingLabel>
+                        </Col>
+                    </Row>
+
+                    <Table striped bordered hover responsive>
+                        <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Producto</th>
+                                <th>Precio venta</th>
+                                <th>Talla</th>
+                                <th>Genero</th>
+                                <th>Cantidad</th>
+                                <th>Imagen</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredProductos.map((producto) => (
+                                <tr key={producto.id_producto} onClick={() => selectProducto(producto)}>
+                                    <td>{producto.id_producto}</td>
+                                    <td>{producto.nombre_producto}</td>
+                                    <td>{producto.precio_venta}</td>
+                                    <td>{producto.talla}</td>
+                                    <td>{producto.genero}</td>
+                                    <td>{producto.cantidad}</td>
+                                    <td>
+                                        {/* Muestra la imagen en base64 */}
+                                        <img src={producto.imagen} alt={producto.nombre} style={{ width: '100px' }} />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </Modal.Body>
+            </Modal>
+
+            <Modal show={showPagoModal} onHide={closePagoModal} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Seleccionar metodo de pago</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {pagos.map((pago) => (
+                        <div className="Seleccion" key={pago.id_tipo_pago} onClick={() => selectPago(pago)}>
+                            {pago.tipo}
                         </div>
                     ))}
                 </Modal.Body>

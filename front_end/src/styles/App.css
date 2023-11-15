@@ -14,33 +14,56 @@
 .margen-contenedor {
   margin-top: 80px;
 }
-.input-container {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
 
-.search-icon {
-  width: 10em; /* Ajusta el valor según el tamaño deseado */
-  height: 10em; /* Ajusta el valor según el tamaño deseado (igual al valor de width) */
-}
-
-
-
-.input-container input {
-  flex: 1; /* El input se expandirá para llenar el espacio disponible */
-  padding-right: 40px; /* Ajusta el valor según el espacio que desees para el icono a la derecha */
-  border: 1px solid #ccc; /* Puedes ajustar el estilo del borde según tus necesidades */
-}
-
+/* Estilo para los boton de búsqueda */
 .search-button {
   position: absolute;
-  right: 5px; /* Ajusta la posición del icono a la derecha */
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  background-color: transparent;
-  border: none;
-  padding: 0;
-  margin: 0;
+  z-index: 1;
+}
+
+/* Estilos para la selección  */
+.Seleccion {
   cursor: pointer;
+  border-radius: 4px;
+  padding: 6px 10px;
+  transition: all 0.2s;
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.align-button {
+  text-align: center;
+}
+
+.footer {
+  background-color: #333;
+  color: #fff;
+  padding: 2px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.social-icon {
+  text-align: center;
+  font-size: 24px;
+  margin: 2px 0;
+}
+
+.social-icon a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+.social-icon a:hover {
+  color: #007bff;
 }

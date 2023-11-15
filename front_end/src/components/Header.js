@@ -28,10 +28,6 @@ function Header({ rol }) {
                 <Nav className="ml-auto">
 
                   <Nav.Link>
-                    <Link to="/home" className="link-unstyled">Inicio</Link>
-                  </Nav.Link>
-
-                  <Nav.Link>
                     <Link to="/Catalogo" className="link-unstyled">Catálogo</Link>
                   </Nav.Link>
 
@@ -157,10 +153,6 @@ function Header({ rol }) {
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="flex-column">
-
-                <Nav.Link>
-                  <Link to="/" className="link-unstyled">Inicio</Link>
-                </Nav.Link>
 
                 <Nav.Link>
                   <Link to="/Catalogo" className="link-unstyled">Catálogo</Link>
@@ -289,10 +281,6 @@ function Header({ rol }) {
                 <Nav className="ml-auto">
 
                   <Nav.Link>
-                    <Link to="/" className="link-unstyled">Inicio</Link>
-                  </Nav.Link>
-
-                  <Nav.Link>
                     <Link to="/Catalogo" className="link-unstyled">Catálogo</Link>
                   </Nav.Link>
 
@@ -418,10 +406,6 @@ function Header({ rol }) {
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="flex-column">
-
-                <Nav.Link>
-                  <Link to="/" className="link-unstyled">Inicio</Link>
-                </Nav.Link>
 
                 <Nav.Link>
                   <Link to="/Catalogo" className="link-unstyled">Catálogo</Link>
@@ -552,10 +536,6 @@ function Header({ rol }) {
                 <Nav className="ml-auto">
 
                   <Nav.Link>
-                    <Link to="/" className="link-unstyled">Inicio</Link>
-                  </Nav.Link>
-
-                  <Nav.Link>
                     <Link to="/Catalogo" className="link-unstyled">Catálogo</Link>
                   </Nav.Link>
 
@@ -614,10 +594,6 @@ function Header({ rol }) {
             </Offcanvas.Header>
             <Offcanvas.Body>
               <Nav className="flex-column">
-
-                <Nav.Link>
-                  <Link to="/" className="link-unstyled">Inicio</Link>
-                </Nav.Link>
 
                 <Nav.Link>
                   <Link to="/Catalogo" className="link-unstyled">Catálogo</Link>

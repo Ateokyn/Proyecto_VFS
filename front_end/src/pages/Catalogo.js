@@ -51,7 +51,7 @@ function Catalogo({ rol }) {  // Define un componente funcional Galeria que reci
     <Container className="margen-contenedor">
 
       <Row className="mb-3">
-        <Col sm="6" md="6" lg="4">
+        <Col sm="12" md="6" lg="12">
           <FloatingLabel controlId="search" label="Buscar">
             <Form.Control
               type="text"
@@ -66,13 +66,13 @@ function Catalogo({ rol }) {  // Define un componente funcional Galeria que reci
       <Row className="g-3">
         {filteredProductos.map((producto) => (
           <Col sm="12" md="4" lg="3">
-            <Card className="h-100"> {/* Agrega la clase h-100 para que todas las tarjetas tengan la misma altura */}
+            <Card className="h-60"> {/* Agrega la clase h-100 para que todas las tarjetas tengan la misma altura */}
               <Card.Img
                 className="image-card"
                 variant="top"
                 src={producto.imagen}
                 alt={producto.nombre_nombre}
-                style={{ height: '200px' }}
+                style={{ height: '250px' }}
               />
               <Card.Body>
                 <Card.Title>{producto.nombre_producto}</Card.Title>

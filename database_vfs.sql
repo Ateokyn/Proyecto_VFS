@@ -216,3 +216,6 @@ ALTER TABLE `ListaDeseos` ADD CONSTRAINT `FK_ListaDeseos_Cliente` FOREIGN KEY (`
 ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY '@kekodroid';
 ALTER USER 'KennyTellez'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'incorrecto';
 ALTER USER 'GiselaPaola'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY 'correcto';
+
+GRANT PROCESS ON *.* TO 'KennyTellez';
+SHOW GRANTS FOR 'KennyTellez'@'localhost';
