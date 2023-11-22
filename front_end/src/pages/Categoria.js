@@ -36,7 +36,7 @@ function Categoria({ rol }) {
                 setNombre_categoria('');
                 setDescripcion_categoria('');
             } else {
-                alert('Error al registrar el cliente');
+                alert('Por favor complete todos los campos antes de continuar.');
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
@@ -46,20 +46,20 @@ function Categoria({ rol }) {
 
     return (
         <div>
-            <Header rol={rol}/>
+            <Header rol={rol} />
 
             <Container>
                 <Card className="margen-contenedor">
                     <Card.Body>
-                        <Card.Title>Registro de Categoria</Card.Title>
+                        <Card.Title>Registro de Categoría</Card.Title>
                         <Form className="mt-3" onSubmit={handleSubmit}>
                             <Row className="g-3">
 
                                 <Col sm="6" md="6" lg="6">
-                                    <FloatingLabel controlId="nombre_categoria" label="Categoria">
+                                    <FloatingLabel controlId="nombre_categoria" label="Categoría">
                                         <Form.Control
                                             type="text"
-                                            placeholder="Ingrese una Categoria"
+                                            placeholder="Ingrese una Categoría"
                                             value={nombre_categoria}
                                             onChange={(e) => setNombre_categoria(e.target.value)}
                                         />
@@ -67,10 +67,10 @@ function Categoria({ rol }) {
                                 </Col>
 
                                 <Col sm="6" md="6" lg="6">
-                                    <FloatingLabel controlId="descripcion_categoria" label="Descripciòn">
+                                    <FloatingLabel controlId="descripcion_categoria" label="Descripción">
                                         <Form.Control
                                             type="text"
-                                            placeholder="Ingrese una Descripciòn"
+                                            placeholder="Ingrese una Descripción"
                                             value={descripcion_categoria}
                                             onChange={(e) => setDescripcion_categoria(e.target.value)}
                                         />
@@ -87,9 +87,9 @@ function Categoria({ rol }) {
                     </Card.Body>
                 </Card>
             </Container>
-
         </div>
     );
+
 }
 
 export default Categoria;

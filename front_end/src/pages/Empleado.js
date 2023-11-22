@@ -54,7 +54,8 @@ function Empleado({ rol }) {
                 setEmail_empleado('');
                 setContrasena_empleado('');
             } else {
-                alert('Error al registrar el cliente');
+                alert('Por favor complete todos los campos antes de continuar.');
+
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
@@ -64,7 +65,7 @@ function Empleado({ rol }) {
 
     return (
         <div>
-            <Header rol={rol}/>
+            <Header rol={rol} />
 
             <Container>
                 <Card className="margen-contenedor">
@@ -129,10 +130,10 @@ function Empleado({ rol }) {
                                 </Col>
 
                                 <Col sm="12" md="6" lg="6">
-                                    <FloatingLabel controlId="telefono_empleado" label="Telefono">
+                                    <FloatingLabel controlId="telefono_empleado" label="Teléfono">
                                         <Form.Control
                                             type="number"
-                                            placeholder="Ingrese el numero de telefono"
+                                            placeholder="Ingrese el número de teléfono"
                                             value={telefono_empleado}
                                             onChange={(e) => setTelefono_empleado(e.target.value)}
                                         />
@@ -151,9 +152,9 @@ function Empleado({ rol }) {
                                 </Col>
 
                                 <Col sm="12" md="12" lg="12">
-                                    <FloatingLabel controlId="contrasena_empleado" label="contraseña">
+                                    <FloatingLabel controlId="contrasena_empleado" label="Contraseña">
                                         <Form.Control
-                                            type="text"
+                                            type="password"
                                             placeholder="Ingrese la contraseña"
                                             value={contrasena_empleado}
                                             onChange={(e) => setContrasena_empleado(e.target.value)}
@@ -174,6 +175,7 @@ function Empleado({ rol }) {
 
         </div>
     );
+
 }
 
 export default Empleado;

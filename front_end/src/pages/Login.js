@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Form, Button, Card, Container, Row, Col, FloatingLabel } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Importar estilos de Bootstrap
 
 const Login = ({ setRol }) => {
   const navigate = useNavigate();
-
   const [nombre_Usuario, setNombre_Usuario] = useState('');
   const [contrasena, setContrasena] = useState('');
+  const [error, setError] = useState(null); // Nuevo estado para manejar errores
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -28,16 +29,21 @@ const Login = ({ setRol }) => {
 
       if (response.ok) {
         const { rol } = await response.json();
-
-        setRol(rol); // Actualiza el estado del rol solo si las credenciales son correctas
-        navigate('/home');
+        setRol(rol);
+        navigate('/Catalogo');
       } else {
-        console.log('Credenciales incorrectas');
-        alert('¡Credenciales incorrectas!');
+        // Manejar el caso de credenciales incorrectas estableciendo el estado de error
+        setError('¡Credenciales incorrectas!');
       }
     } catch (error) {
       console.error('Error en la solicitud: ', error);
+      // Manejar otros errores estableciendo el estado de error
+      setError('Error en la solicitud. Inténtalo de nuevo más tarde.');
     }
+  };
+
+  const handleInputClick = () => {
+    setError(null);
   };
 
   return (
@@ -57,6 +63,7 @@ const Login = ({ setRol }) => {
                         type="text"
                         value={nombre_Usuario}
                         onChange={(e) => setNombre_Usuario(e.target.value)}
+                        onClick={handleInputClick}
                       />
                     </FloatingLabel>
                   </Col>
@@ -68,16 +75,32 @@ const Login = ({ setRol }) => {
                         type="password"
                         value={contrasena}
                         onChange={(e) => setContrasena(e.target.value)}
+                        onClick={handleInputClick}
                       />
                     </FloatingLabel>
                   </Col>
                 </Row>
 
-                <div className="center-button">
-                  <Button variant="primary" type="submit" block className="mt-3">
-                    Iniciar Sesión
-                  </Button>
-                </div>
+                {/* Mensaje de error */}
+                <Row className="mt-3">
+                  <Col>
+                    {error && (
+                      <div className="alert alert-danger" role="alert">
+                        {error}
+                      </div>
+                    )}
+                  </Col>
+                </Row>
+
+                <Row className="mb-3">
+                  <Col sm="12" md="15" lg="12">
+                    <div className="center-button">
+                      <Button variant="primary" type="submit" block className="mt-3">
+                        Iniciar Sesión
+                      </Button>
+                    </div>
+                  </Col>
+                </Row>
               </Form>
             </Card.Body>
           </Card>

@@ -5,10 +5,17 @@ import { Link } from 'react-router-dom';
 import { FaRightFromBracket } from 'react-icons/fa6';
 
 function Header({ rol }) {
+  
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
+  };
+
+  // Función para cerrar sesión
+  const cerrarSesion = () => {
+    // Eliminar el rol del localStorage al cerrar sesión
+    localStorage.removeItem('userRol');
   };
 
   return (
@@ -129,7 +136,7 @@ function Header({ rol }) {
                   </NavDropdown>
 
                   <Nav.Link>
-                    <Link to="/" className="link-unstyled"><FaRightFromBracket /></Link>
+                    <Link to="/" onClick={cerrarSesion} className="link-unstyled"><FaRightFromBracket /></Link>
                   </Nav.Link>
 
                 </Nav>
@@ -159,8 +166,8 @@ function Header({ rol }) {
                 </Nav.Link>
 
                 <Nav.Link>
-                    <Link to="/Venta" className="link-unstyled">Compra</Link>
-                  </Nav.Link>
+                  <Link to="/Venta" className="link-unstyled">Compra</Link>
+                </Nav.Link>
 
                 <NavDropdown title="Gestionar usuarios" id="usuarios">
                   <NavDropdown.Item>
@@ -258,7 +265,7 @@ function Header({ rol }) {
                 </NavDropdown>
 
                 <Nav.Link>
-                  <Link to="/" className="link-unstyled"><FaRightFromBracket /></Link>
+                  <Link to="/" onClick={cerrarSesion} className="link-unstyled"><FaRightFromBracket /></Link>
                 </Nav.Link>
 
               </Nav>
@@ -382,7 +389,7 @@ function Header({ rol }) {
                   </NavDropdown>
 
                   <Nav.Link>
-                    <Link to="/" className="link-unstyled"><FaRightFromBracket /></Link>
+                    <Link to="/" onClick={cerrarSesion} className="link-unstyled"><FaRightFromBracket /></Link>
                   </Nav.Link>
 
                 </Nav>
@@ -412,8 +419,8 @@ function Header({ rol }) {
                 </Nav.Link>
 
                 <Nav.Link>
-                    <Link to="/Venta" className="link-unstyled">Compra</Link>
-                  </Nav.Link>
+                  <Link to="/Venta" className="link-unstyled">Compra</Link>
+                </Nav.Link>
 
                 <NavDropdown title="Gestionar usuarios" id="usuarios">
                   <NavDropdown.Item>
@@ -511,7 +518,7 @@ function Header({ rol }) {
                 </NavDropdown>
 
                 <Nav.Link>
-                  <Link to="/" className="link-unstyled"><FaRightFromBracket /></Link>
+                  <Link to="/" onClick={cerrarSesion} className="link-unstyled"><FaRightFromBracket /></Link>
                 </Nav.Link>
 
               </Nav>
@@ -570,7 +577,7 @@ function Header({ rol }) {
                   </NavDropdown>
 
                   <Nav.Link>
-                    <Link to="/" className="link-unstyled"><FaRightFromBracket /></Link>
+                    <Link to="/" onClick={cerrarSesion} className="link-unstyled"><FaRightFromBracket /></Link>
                   </Nav.Link>
 
                 </Nav>
@@ -600,8 +607,8 @@ function Header({ rol }) {
                 </Nav.Link>
 
                 <Nav.Link>
-                    <Link to="/Venta" className="link-unstyled">Compra</Link>
-                  </Nav.Link>
+                  <Link to="/Venta" className="link-unstyled">Compra</Link>
+                </Nav.Link>
 
                 <NavDropdown title="Gestionar productos" id="productos">
 
@@ -630,8 +637,8 @@ function Header({ rol }) {
                 </NavDropdown>
 
                 <Nav.Link>
-                    <Link to="/" className="link-unstyled"><FaRightFromBracket /></Link>
-                  </Nav.Link>
+                  <Link to="/" onClick={cerrarSesion} className="link-unstyled"><FaRightFromBracket /></Link>
+                </Nav.Link>
 
               </Nav>
             </Offcanvas.Body>

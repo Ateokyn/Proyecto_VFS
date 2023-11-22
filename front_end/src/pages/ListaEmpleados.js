@@ -59,10 +59,23 @@ function ListaEmpleado({ rol }) {
 
   const loadEmpleado = (id_empleado) => {
     fetch('http://localhost:5000/crud/read_empleado')
-      .then((response) => response.json())
-      .then((data) => setEmpleados(data))
-      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+      .then((response) => {
+        if (!response.ok) {
+          // Si la respuesta no es exitosa, lanzar un error
+          throw new Error('Error al obtener la lista de empleados. Por favor, inténtelo de nuevo.');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Actualizar el estado con los datos obtenidos
+        setEmpleados(data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener la lista de empleados:', error);
+        alert('Ocurrió un error al obtener la lista de empleados. Por favor, inténtelo de nuevo.');
+      });
   };
+
 
 
   // Función para enviar el formulario de actualización
@@ -77,39 +90,65 @@ function ListaEmpleado({ rol }) {
     })
       .then((response) => {
         if (response.ok) {
-          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de docentes
+          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de empleados
           setShowModal(false);
-          loadEmpleado(); // Cargar la lista de docentes actualizada
+          loadEmpleado(); // Cargar la lista de empleados actualizada
+        } else {
+          // La respuesta no fue exitosa
+          throw new Error('Error al actualizar el registro. Por favor, inténtelo de nuevo.');
         }
       })
-      .catch((error) => console.error('Error al actualizar el registro:', error));
+      .catch((error) => {
+        console.error('Error al actualizar el registro:', error);
+        alert('Ocurrió un error al intentar actualizar el empleado. Por favor, inténtelo de nuevo.');
+      });
   };
 
-  // Función para eliminar un docente
+  // Función para eliminar un empleado
   const handleDelete = (id_empleado) => {
-    const confirmation = window.confirm('¿Seguro que deseas eliminar este docente?');
+    const confirmation = window.confirm('¿Seguro que deseas eliminar este empleado?');
     if (confirmation) {
-      // Realiza la solicitud DELETE al servidor para eliminar el docente
+      // Realiza la solicitud DELETE al servidor para eliminar el empleado
       fetch(`http://localhost:5000/crud/delete_empleado/${id_empleado}`, {
         method: 'DELETE',
       })
         .then((response) => {
           if (response.ok) {
-            // La eliminación fue exitosa, refresca la lista de docentes
+            // La eliminación fue exitosa, refresca la lista de empleados
             loadEmpleado();
+          } else {
+            // La respuesta no fue exitosa
+            throw new Error('Error al eliminar el empleado. Por favor, inténtelo de nuevo.');
           }
         })
-        .catch((error) => console.error('Error al eliminar el docente:', error));
+        .catch((error) => {
+          console.error('Error al eliminar el empleado:', error);
+          alert('Ocurrió un error al intentar eliminar el empleado. Por favor, inténtelo de nuevo.');
+        });
     }
   };
 
-  // Realiza una solicitud GET al servidor para obtener los docentes
+
+  // Realiza una solicitud GET al servidor para obtener los empleados
   useEffect(() => {
     fetch('http://localhost:5000/crud/read_empleado')
-      .then((response) => response.json())
-      .then((data) => setEmpleados(data))
-      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+      .then((response) => {
+        if (!response.ok) {
+          // Si la respuesta no es exitosa, lanzar un error
+          throw new Error('Error al obtener la lista de empleados. Por favor, inténtelo de nuevo.');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Actualizar el estado con los datos obtenidos
+        setEmpleados(data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener la lista de empleados:', error);
+        alert('Ocurrió un error al obtener la lista de empleados. Por favor, inténtelo de nuevo.');
+      });
   }, []);
+
 
   const filteredEmpleado = empleados.filter((empleado) => {
     // Convierte los valores de los campos a minúsculas para realizar una búsqueda insensible a mayúsculas y minúsculas
@@ -138,7 +177,7 @@ function ListaEmpleado({ rol }) {
 
   return (
     <div>
-      <Header rol={rol}/>
+      <Header rol={rol} />
 
       <Card className="margen-contenedor">
         <Card.Body>
@@ -163,13 +202,15 @@ function ListaEmpleado({ rol }) {
                 <th abbr="Id">Id</th>
                 <th>Primer nombre</th>
                 <th>Segundo nombre</th>
-                <th>Primer apellidos</th>
-                <th>Segundo apellidos</th>
+                <th>Primer apellido</th>
+                <th>Segundo apellido</th>
                 <th>Especialidad</th>
-                <th>Telefono</th>
+                <th>Teléfono</th>
                 <th>Email</th>
                 <th>Contraseña</th>
-                <th>Acción</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+
               </tr>
             </thead>
             <tbody>
@@ -185,8 +226,10 @@ function ListaEmpleado({ rol }) {
                   <td>{empleado.email_empleado}</td>
                   <td>{empleado.contrasena_empleado}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(empleado)}><FaPencil/></Button>
-                    <Button variant="danger" onClick={() => handleDelete(empleado.id_empleado)}><FaTrashCan/></Button>
+                    <Button variant="primary" onClick={() => openModal(empleado)}><FaPencil /></Button>
+                  </td>
+                  <td>
+                    <Button variant="danger" onClick={() => handleDelete(empleado.id_empleado)}><FaTrashCan /></Button>
                   </td>
                 </tr>
               ))}

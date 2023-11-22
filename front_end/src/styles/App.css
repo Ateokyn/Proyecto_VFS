@@ -1,10 +1,13 @@
 .navbar-color {
-  background-color: #d81c0e; /* Color de fondo personalizado */
+  background-color: #d81c0e;
+  /* Color de fondo personalizado */
 }
 
 .link-unstyled {
-  text-decoration: none; /* Elimina el subrayado */
-  color: inherit; /* Usa el color heredado (generalmente, el color predeterminado) */
+  text-decoration: none;
+  /* Elimina el subrayado */
+  color: inherit;
+  /* Usa el color heredado (generalmente, el color predeterminado) */
 }
 
 .center-button {
@@ -66,4 +69,19 @@
 
 .social-icon a:hover {
   color: #007bff;
+}
+
+/* En SinAcceso.css */
+.sin-acceso-container {
+  height: 100vh;
+  /* 100% de la altura de la ventana */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sin-acceso-card {
+  width: 300px;
+  text-align: center;
+  padding: 20px;
 }

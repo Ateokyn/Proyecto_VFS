@@ -49,16 +49,29 @@ function ListaProveedor({ rol }) {
 
   const loadProveedor = () => {
     fetch('http://localhost:5000/crud/read_proveedor')
-      .then((response) => response.json())
-      .then((data) => setProveedores(data))
-      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+      .then((response) => {
+        if (!response.ok) {
+          // Si la respuesta no es exitosa, lanzar un error
+          throw new Error('Error al obtener la lista de proveedores. Por favor, inténtelo de nuevo.');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Actualizar el estado con los datos obtenidos
+        setProveedores(data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener la lista de proveedores:', error);
+        alert('Ocurrió un error al obtener la lista de proveedores. Por favor, inténtelo de nuevo.');
+      });
   };
+
 
 
   // Función para enviar el formulario de actualización
   const handleUpdate = () => {
     // Realiza la solicitud PUT al servidor para actualizar el registro
-    fetch(`http://localhost:5000/crud/update_proveedore/${selectedProveedor.id_proveedor}`, {
+    fetch(`http://localhost:5000/crud/update_proveedor/${selectedProveedor.id_proveedor}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -67,39 +80,66 @@ function ListaProveedor({ rol }) {
     })
       .then((response) => {
         if (response.ok) {
-          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de docentes
+          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de proveedores
           setShowModal(false);
-          loadProveedor(); // Cargar la lista de docentes actualizada
+          loadProveedor(); // Cargar la lista de proveedores actualizada
+        } else {
+          // La respuesta no fue exitosa
+          throw new Error('Error al actualizar el registro. Por favor, inténtelo de nuevo.');
         }
       })
-      .catch((error) => console.error('Error al actualizar el registro:', error));
+      .catch((error) => {
+        console.error('Error al actualizar el registro:', error);
+        alert('Ocurrió un error al intentar actualizar el proveedor. Por favor, inténtelo de nuevo.');
+      });
   };
 
-  // Función para eliminar un docente
+
+  // Función para eliminar un proveedor
   const handleDelete = (id_proveedor) => {
-    const confirmation = window.confirm('¿Seguro que deseas eliminar este docente?');
+    const confirmation = window.confirm('¿Seguro que deseas eliminar este proveedor?');
     if (confirmation) {
-      // Realiza la solicitud DELETE al servidor para eliminar el docente
+      // Realiza la solicitud DELETE al servidor para eliminar el proveedor
       fetch(`http://localhost:5000/crud/delete_proveedor/${id_proveedor}`, {
         method: 'DELETE',
       })
         .then((response) => {
           if (response.ok) {
-            // La eliminación fue exitosa, refresca la lista de docentes
+            // La eliminación fue exitosa, refresca la lista de proveedores
             loadProveedor();
+          } else {
+            // La respuesta no fue exitosa
+            throw new Error('Error al eliminar el proveedor. Por favor, inténtelo de nuevo.');
           }
         })
-        .catch((error) => console.error('Error al eliminar el docente:', error));
+        .catch((error) => {
+          console.error('Error al eliminar el proveedor:', error);
+          alert('Ocurrió un error al intentar eliminar el proveedor. Por favor, inténtelo de nuevo.');
+        });
     }
   };
 
-  // Realiza una solicitud GET al servidor para obtener los docentes
+
+  // Realiza una solicitud GET al servidor para obtener los proveedores
   useEffect(() => {
     fetch('http://localhost:5000/crud/read_proveedor')
-      .then((response) => response.json())
-      .then((data) => setProveedores(data))
-      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+      .then((response) => {
+        if (!response.ok) {
+          // Si la respuesta no es exitosa, lanzar un error
+          throw new Error('Error al obtener la lista de proveedores. Por favor, inténtelo de nuevo.');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Actualizar el estado con los datos obtenidos
+        setProveedores(data);
+      })
+      .catch((error) => {
+        console.error('Error al obtener la lista de proveedores:', error);
+        alert('Ocurrió un error al obtener la lista de proveedores. Por favor, inténtelo de nuevo.');
+      });
   }, []);
+
 
   const filteredProveedor = proveedores.filter((proveedor) => {
     // Convierte los valores de los campos a minúsculas para realizar una búsqueda insensible a mayúsculas y minúsculas
@@ -118,7 +158,7 @@ function ListaProveedor({ rol }) {
 
   return (
     <div>
-      <Header rol={rol}/>
+      <Header rol={rol} />
 
       <Card className="margen-contenedor">
         <Card.Body>
@@ -142,9 +182,10 @@ function ListaProveedor({ rol }) {
               <tr>
                 <th abbr="Id">Id</th>
                 <th>Empresa</th>
-                <th>Direcciòn</th>
+                <th>Dirección</th>
                 <th>Ciudad</th>
-                <th>Acción</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
               </tr>
             </thead>
             <tbody>
@@ -155,13 +196,16 @@ function ListaProveedor({ rol }) {
                   <td>{proveedor.direccion_proveedor}</td>
                   <td>{proveedor.ciudad_proveedor}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(proveedor)}><FaPencil/></Button>
-                    <Button variant="danger" onClick={() => handleDelete(proveedor.id_proveedor)}><FaTrashCan/></Button>
+                    <Button variant="primary" onClick={() => openModal(proveedor)}><FaPencil /></Button>
+                  </td>
+                  <td>
+                    <Button variant="danger" onClick={() => handleDelete(proveedor.id_proveedor)}><FaTrashCan /></Button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
+
         </Card.Body>
       </Card>
 

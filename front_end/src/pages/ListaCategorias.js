@@ -50,7 +50,7 @@ function ListaCategoria({ rol }) {
     fetch('http://localhost:5000/crud/read_categoria')
       .then((response) => response.json())
       .then((data) => setCategorias(data))
-      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+      .catch((error) => console.error('Error al obtener las categorias:', error));
   };
 
 
@@ -66,17 +66,24 @@ function ListaCategoria({ rol }) {
     })
       .then((response) => {
         if (response.ok) {
-          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de docentes
+          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de categorías
           setShowModal(false);
-          loadCategoria(); // Cargar la lista de docentes actualizada
+          loadCategoria(); // Cargar la lista de categorías actualizada
+        } else {
+          // La respuesta no fue exitosa
+          throw new Error('Error en la solicitud de actualización. Por favor, inténtelo de nuevo.');
         }
       })
-      .catch((error) => console.error('Error al actualizar el registro:', error));
+      .catch((error) => {
+        console.error('Error al actualizar el registro:', error);
+        alert('Ocurrió un error al intentar actualizar la categoría. Por favor, inténtelo de nuevo.');
+      });
   };
+
 
   // Función para eliminar un docente
   const handleDelete = (id_categoria) => {
-    const confirmation = window.confirm('¿Seguro que deseas eliminar este docente?');
+    const confirmation = window.confirm('¿Seguro que deseas eliminar esta categoria?');
     if (confirmation) {
       // Realiza la solicitud DELETE al servidor para eliminar el docente
       fetch(`http://localhost:5000/crud/delete_categoria/${id_categoria}`, {
@@ -88,7 +95,7 @@ function ListaCategoria({ rol }) {
             loadCategoria();
           }
         })
-        .catch((error) => console.error('Error al eliminar el docente:', error));
+        .catch((error) => console.error('Error al eliminar la categoria:', error));
     }
   };
 
@@ -97,7 +104,7 @@ function ListaCategoria({ rol }) {
     fetch('http://localhost:5000/crud/read_categoria')
       .then((response) => response.json())
       .then((data) => setCategorias(data))
-      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+      .catch((error) => console.error('Error al obtener las categorias:', error));
   }, []);
 
 
@@ -116,11 +123,11 @@ function ListaCategoria({ rol }) {
 
   return (
     <div>
-      <Header rol={rol}/>
+      <Header rol={rol} />
 
       <Card className="margen-contenedor">
         <Card.Body>
-          <Card.Title className="mb-3">Listado de Categorias</Card.Title>
+          <Card.Title className="mb-3">Listado de Categorías</Card.Title>
 
           <Row className="mb-3">
             <Col>
@@ -139,9 +146,9 @@ function ListaCategoria({ rol }) {
             <thead>
               <tr>
                 <th abbr="Id">Id</th>
-                <th>Nombre categoria</th>
-                <th>Descripción categoria</th>
-                <th>Acción</th>
+                <th>Nombre categoría</th>
+                <th>Descripción categoría</th>
+                
               </tr>
             </thead>
             <tbody>
@@ -151,8 +158,10 @@ function ListaCategoria({ rol }) {
                   <td>{categoria.nombre_categoria}</td>
                   <td>{categoria.descripcion_categoria}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(categoria)}><FaPencil/></Button>
-                    <Button variant="danger" onClick={() => handleDelete(categoria.id_categoria)}><FaTrashCan/></Button>
+                    <Button variant="primary" onClick={() => openModal(categoria)}><FaPencil /></Button>
+                  </td>
+                  <td>
+                    <Button variant="danger" onClick={() => handleDelete(categoria.id_categoria)}><FaTrashCan /></Button>
                   </td>
                 </tr>
               ))}
@@ -163,12 +172,12 @@ function ListaCategoria({ rol }) {
 
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Actualizar Categoria</Modal.Title>
+          <Modal.Title>Actualizar Categoría</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Card className="mt-3">
             <Card.Body>
-              <Card.Title>Registro de Categoria</Card.Title>
+              <Card.Title>Registro de Categoría</Card.Title>
 
               <Row className="mb-3">
                 <Col>
@@ -187,10 +196,10 @@ function ListaCategoria({ rol }) {
                 <Row className="g-3">
 
                   <Col sm="6" md="6" lg="4">
-                    <FloatingLabel controlId="nombre_categoria" label="Categoria">
+                    <FloatingLabel controlId="nombre_categoria" label="Categoría">
                       <Form.Control
                         type="text"
-                        placeholder="Ingrese una categoria"
+                        placeholder="Ingrese una categoría"
                         name="nombre_categoria"
                         value={formData.nombre_categoria}
                         onChange={handleFormChange}
@@ -227,6 +236,7 @@ function ListaCategoria({ rol }) {
 
     </div>
   );
+
 }
 
 export default ListaCategoria;

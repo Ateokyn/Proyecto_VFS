@@ -24,31 +24,46 @@ function ListaProducto({ rol }) {
   const [categorias, setcategorias] = useState([]); // Estado para almacenar las categorías
   const [proveedores, setproveedores] = useState([]); // Estado para almacenar los proveedores
 
+  // Realiza una solicitud GET al servidor para obtener los proveedores
   useEffect(() => {
-    // Realiza una solicitud a tu ruta para obtener las especialidades
     fetch('http://localhost:5000/crud/read_proveedor')
-      .then(response => response.json())
-      .then(data => {
-        // Actualiza el estado con las especialidades obtenidas
+      .then((response) => {
+        if (!response.ok) {
+          // Si la respuesta no es exitosa, lanzar un error
+          throw new Error('Error al obtener la lista de proveedores. Por favor, inténtelo de nuevo.');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Actualizar el estado con los datos obtenidos
         setproveedores(data);
       })
-      .catch(error => {
-        console.error('Error al obtener las especialidades', error);
+      .catch((error) => {
+        console.error('Error al obtener la lista de proveedores:', error);
+        alert('Ocurrió un error al obtener la lista de proveedores. Por favor, inténtelo de nuevo.');
       });
   }, []);
 
+  // Realiza una solicitud GET al servidor para obtener las categorías
   useEffect(() => {
-    // Realiza una solicitud a tu ruta para obtener las especialidades
     fetch('http://localhost:5000/crud/read_categoria')
-      .then(response => response.json())
-      .then(data => {
-        // Actualiza el estado con las especialidades obtenidas
+      .then((response) => {
+        if (!response.ok) {
+          // Si la respuesta no es exitosa, lanzar un error
+          throw new Error('Error al obtener la lista de categorías. Por favor, inténtelo de nuevo.');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Actualizar el estado con los datos obtenidos
         setcategorias(data);
       })
-      .catch(error => {
-        console.error('Error al obtener las especialidades', error);
+      .catch((error) => {
+        console.error('Error al obtener la lista de categorías:', error);
+        alert('Ocurrió un error al obtener la lista de categorías. Por favor, inténtelo de nuevo.');
       });
   }, []);
+
 
   const handleImagenChange = (event) => {
     const file = event.target.files[0]; // Obtener el primer archivo seleccionado
@@ -106,7 +121,7 @@ function ListaProducto({ rol }) {
     setSelectedProducto(producto);
 
     setFormData({
-      
+
       id_proveedor: producto.id_proveedor,
       id_categoria: producto.id_categoria,
       nombre_producto: producto.nombre_producto,
@@ -127,8 +142,8 @@ function ListaProducto({ rol }) {
       .catch((error) => console.error('Error al obtener los docentes y personas:', error));
   };
 
-   // Función para manejar cambios en el formulario
-   const handleFormChange = (e) => {
+  // Función para manejar cambios en el formulario
+  const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -138,7 +153,6 @@ function ListaProducto({ rol }) {
 
 
   const handleUpdate = () => {
-    console.log('Datos a enviar al servidor para actualizar:', formData);
 
     // Realiza la solicitud PUT al servidor para actualizar el registro
     fetch(`http://localhost:5000/crud/update_producto/${selectedProducto.id_producto}`, {
@@ -157,6 +171,7 @@ function ListaProducto({ rol }) {
       })
       .catch((error) => console.error('Error al actualizar el registro:', error));
   };
+
 
   // Función para eliminar un docente
   const handleDelete = (id_producto) => {
@@ -186,7 +201,7 @@ function ListaProducto({ rol }) {
 
   return (
     <div>
-      <Header rol={rol}/>
+      <Header rol={rol} />
 
       <Card className="mt-5">
         <Card.Body>
@@ -212,15 +227,17 @@ function ListaProducto({ rol }) {
                 <th style={{ display: 'none' }}>IDProveedor</th>
                 <th>Proveedor</th>
                 <th style={{ display: 'none' }}>IDCategoria</th>
-                <th>Categoria</th>
+                <th>Categoría</th>
                 <th>Producto</th>
                 <th>Imagen</th>
                 <th>Precio venta</th>
                 <th>Precio compra</th>
                 <th>Cantidad</th>
                 <th>Talla</th>
-                <th>Genero</th>
-                <th>Acción</th>
+                <th>Género</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+
               </tr>
             </thead>
             <tbody>
@@ -236,13 +253,15 @@ function ListaProducto({ rol }) {
                     {/* Muestra la imagen en base64 */}
                     <img src={producto.imagen} alt={producto.nombre} style={{ width: '100px' }} />
                   </td>
-                  <td>{producto.precio_venta}</td>
-                  <td>{producto.precio_compra}</td>
+                  <td>C${producto.precio_venta}</td>
+                  <td>C${producto.precio_compra}</td>
                   <td>{producto.cantidad}</td>
                   <td>{producto.talla}</td>
                   <td>{producto.genero}</td>
                   <td>
                     <Button variant="primary" onClick={() => openModal(producto)}><FaPencil /></Button>
+                  </td>
+                  <td>
                     <Button variant="danger" onClick={() => handleDelete(producto.id_producto)}><FaTrashCan /></Button>
                   </td>
                 </tr>
@@ -264,7 +283,7 @@ function ListaProducto({ rol }) {
               <Form className="mt-3">
                 <Row className="g-3">
 
-                <FloatingLabel controlId="proveedores" label="Proveedores">
+                  <FloatingLabel controlId="proveedores" label="Proveedores">
                     <Form.Select
                       aria-label="proveedores"
                       value={formData.id_proveedor}

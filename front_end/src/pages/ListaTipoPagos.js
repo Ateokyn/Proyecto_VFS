@@ -36,12 +36,13 @@ function ListaTipoPago({ rol }) {
     });
   };
 
-  const loadTipo_pago = (id_tipo_pago) => {
+  const loadTipoPago = (id_tipo_pago) => {
     fetch('http://localhost:5000/crud/read_tipo_pago')
       .then((response) => response.json())
       .then((data) => setTipo_pagos(data))
-      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+      .catch((error) => console.error('Error al obtener los tipos de pago:', error));
   };
+
 
 
   // Función para enviar el formulario de actualización
@@ -56,39 +57,51 @@ function ListaTipoPago({ rol }) {
     })
       .then((response) => {
         if (response.ok) {
-          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de docentes
+          // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de tipos de pago
           setShowModal(false);
-          loadTipo_pago(); // Cargar la lista de docentes actualizada
+          loadTipoPago(); // Cargar la lista de tipos de pago actualizada
+        } else {
+          // Muestra un mensaje de error si la respuesta no es exitosa
+          console.error('Error al actualizar el registro:', response.statusText);
         }
       })
-      .catch((error) => console.error('Error al actualizar el registro:', error));
+      .catch((error) => {
+        console.error('Error al realizar la solicitud de actualización:', error);
+      });
   };
 
-  // Función para eliminar un docente
+
+  // Función para eliminar un tipo de pago
   const handleDelete = (id_tipo_pago) => {
-    const confirmation = window.confirm('¿Seguro que deseas eliminar este docente?');
+    const confirmation = window.confirm('¿Seguro que deseas eliminar este tipo de pago?');
     if (confirmation) {
-      // Realiza la solicitud DELETE al servidor para eliminar el docente
+      // Realiza la solicitud DELETE al servidor para eliminar el tipo de pago
       fetch(`http://localhost:5000/crud/delete_tipo_pago/${id_tipo_pago}`, {
         method: 'DELETE',
       })
         .then((response) => {
           if (response.ok) {
-            // La eliminación fue exitosa, refresca la lista de docentes
-            loadTipo_pago();
+            // La eliminación fue exitosa, refresca la lista de tipos de pago
+            loadTipoPago();
+          } else {
+            // Muestra un mensaje de error si la eliminación no fue exitosa
+            console.error('Error al eliminar el tipo de pago:', response.statusText);
           }
         })
-        .catch((error) => console.error('Error al eliminar el docente:', error));
+        .catch((error) => {
+          console.error('Error al realizar la solicitud de eliminación:', error);
+        });
     }
   };
 
-  // Realiza una solicitud GET al servidor para obtener los docentes
+  // Realiza una solicitud GET al servidor para obtener los tipos de pago
   useEffect(() => {
     fetch('http://localhost:5000/crud/read_tipo_pago')
       .then((response) => response.json())
       .then((data) => setTipo_pagos(data))
-      .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+      .catch((error) => console.error('Error al obtener los tipos de pago:', error));
   }, []);
+
 
 
   const filteredTipo_pago = tipo_pagos.filter((tipo_pago) => {
@@ -104,7 +117,7 @@ function ListaTipoPago({ rol }) {
 
   return (
     <div>
-      <Header rol={rol}/>
+      <Header rol={rol} />
 
       <Card className="margen-contenedor">
         <Card.Body>
@@ -128,7 +141,8 @@ function ListaTipoPago({ rol }) {
               <tr>
                 <th abbr="Id">Id</th>
                 <th>Nombre Tipo</th>
-                <th>Acción</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
               </tr>
             </thead>
             <tbody>
@@ -137,13 +151,16 @@ function ListaTipoPago({ rol }) {
                   <td>{tipo_pago.id_tipo_pago}</td>
                   <td>{tipo_pago.tipo}</td>
                   <td>
-                    <Button variant="primary" onClick={() => openModal(tipo_pago)}><FaPencil/></Button>
-                    <Button variant="danger" onClick={() => handleDelete(tipo_pago.id_tipo_pago)}><FaTrashCan/></Button>
+                    <Button variant="primary" onClick={() => openModal(tipo_pago)}><FaPencil /></Button>
+                  </td>
+                  <td>
+                    <Button variant="danger" onClick={() => handleDelete(tipo_pago.id_tipo_pago)}><FaTrashCan /></Button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
+
         </Card.Body>
       </Card>
 

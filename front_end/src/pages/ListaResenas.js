@@ -21,26 +21,47 @@ function ListaResena({ rol }) {
     const [productos, setproductos] = useState([]); // Estado para almacenar los productos
 
 
+    // Realiza una solicitud GET al servidor para obtener los clientes
     useEffect(() => {
-        // Realiza una solicitud a tu ruta para obtener las especialidades
         fetch('http://localhost:5000/crud/read_cliente')
-            .then(response => response.json())
-            .then(data => {
-                // Actualiza el estado con las especialidades obtenidas
+            .then((response) => {
+                if (!response.ok) {
+                    // Si la respuesta no es exitosa, lanzar un error
+                    throw new Error('Error al obtener la lista de clientes. Por favor, inténtelo de nuevo.');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                // Actualizar el estado con los datos obtenidos
                 setclientes(data);
             })
-            .catch(error => {
-                console.error('Error al obtener las especialidades', error);
+            .catch((error) => {
+                console.error('Error al obtener la lista de clientes:', error);
+                alert('Ocurrió un error al obtener la lista de clientes. Por favor, inténtelo de nuevo.');
             });
     }, []);
 
-    // Realiza una solicitud GET al servidor para obtener los docentes
+
+    // Realiza una solicitud GET al servidor para obtener los productos
     useEffect(() => {
         fetch('http://localhost:5000/crud/read_producto')
-            .then((response) => response.json())
-            .then((data) => setproductos(data))
-            .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+            .then((response) => {
+                if (!response.ok) {
+                    // Si la respuesta no es exitosa, lanzar un error
+                    throw new Error('Error al obtener la lista de productos. Por favor, inténtelo de nuevo.');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                // Actualizar el estado con los datos obtenidos
+                setproductos(data);
+            })
+            .catch((error) => {
+                console.error('Error al obtener la lista de productos:', error);
+                alert('Ocurrió un error al obtener la lista de productos. Por favor, inténtelo de nuevo.');
+            });
     }, []);
+
 
     const handleImagenChange = (event) => {
         const file = event.target.files[0]; // Obtener el primer archivo seleccionado
@@ -103,10 +124,23 @@ function ListaResena({ rol }) {
 
     const loadResena = () => {
         fetch('http://localhost:5000/crud/read_resena')
-            .then((response) => response.json())
-            .then((data) => setResenas(data))
-            .catch((error) => console.error('Error al obtener los docentes y personas:', error));
+            .then((response) => {
+                if (!response.ok) {
+                    // Si la respuesta no es exitosa, lanzar un error
+                    throw new Error('Error al obtener la lista de reseñas. Por favor, inténtelo de nuevo.');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                // Actualizar el estado con los datos obtenidos
+                setResenas(data);
+            })
+            .catch((error) => {
+                console.error('Error al obtener la lista de reseñas:', error);
+                alert('Ocurrió un error al obtener la lista de reseñas. Por favor, inténtelo de nuevo.');
+            });
     };
+
 
     // Función para manejar cambios en el formulario
     const handleFormChange = (e) => {
@@ -128,44 +162,69 @@ function ListaResena({ rol }) {
             body: JSON.stringify(formData),
         })
             .then((response) => {
-                if (response.ok) {
-                    // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de productos
-                    setShowModal(false);
-                    loadResena(); // Cargar la lista de productos actualizada
+                if (!response.ok) {
+                    // Si la respuesta no es exitosa, lanzar un error
+                    throw new Error('Error al actualizar la reseña. Por favor, inténtelo de nuevo.');
                 }
+                // La actualización fue exitosa, puedes cerrar el modal y refrescar la lista de reseñas
+                setShowModal(false);
+                loadResena(); // Cargar la lista de reseñas actualizada
             })
-            .catch((error) => console.error('Error al actualizar el registro:', error));
+            .catch((error) => {
+                console.error('Error al actualizar la reseña:', error);
+                alert('Ocurrió un error al actualizar la reseña. Por favor, inténtelo de nuevo.');
+            });
     };
 
-    // Función para eliminar un docente
+
+    // Función para eliminar una reseña
     const handleDelete = (id_resena) => {
-        const confirmation = window.confirm('¿Seguro que deseas eliminar este producto?');
+        const confirmation = window.confirm('¿Seguro que deseas eliminar esta reseña?');
         if (confirmation) {
-            // Realiza la solicitud DELETE al servidor para eliminar el docente
+            // Realiza la solicitud DELETE al servidor para eliminar la reseña
             fetch(`http://localhost:5000/crud/delete_resena/${id_resena}`, {
                 method: 'DELETE',
             })
                 .then((response) => {
-                    if (response.ok) {
-                        // La eliminación fue exitosa, refresca la lista de docentes
-                        loadResena();
+                    if (!response.ok) {
+                        // Si la respuesta no es exitosa, lanzar un error
+                        throw new Error('Error al eliminar la reseña. Por favor, inténtelo de nuevo.');
                     }
+                    // La eliminación fue exitosa, refresca la lista de reseñas
+                    loadResena();
                 })
-                .catch((error) => console.error('Error al eliminar el producto:', error));
+                .catch((error) => {
+                    console.error('Error al eliminar la reseña:', error);
+                    alert('Ocurrió un error al eliminar la reseña. Por favor, inténtelo de nuevo.');
+                });
         }
     };
 
-    // Realiza una solicitud GET al servidor para obtener los docentes
+
+    // Realiza una solicitud GET al servidor para obtener las reseñas
     useEffect(() => {
         fetch('http://localhost:5000/crud/read_resena')
-            .then((response) => response.json())
-            .then((data) => setResenas(data))
-            .catch((error) => console.error('Error al obtener los productos:', error));
+            .then((response) => {
+                if (!response.ok) {
+                    // Si la respuesta no es exitosa, lanzar un error
+                    throw new Error('Error al obtener las reseñas. Por favor, inténtelo de nuevo.');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                // Actualiza el estado con las reseñas obtenidas
+                setResenas(data);
+            })
+            .catch((error) => {
+                console.error('Error al obtener las reseñas:', error);
+                alert('Ocurrió un error al obtener las reseñas. Por favor, inténtelo de nuevo.');
+            });
     }, []);
+
 
     return (
         <div>
-            <Header rol={rol}/>
+            <Header rol={rol} />
 
             <Card className="margen-contenedor">
                 <Card.Body>
@@ -194,19 +253,20 @@ function ListaResena({ rol }) {
                                 <th style={{ display: 'none' }}>IDProducto</th>
                                 <th>Producto</th>
                                 <th>Imagen</th>
-                                <th>Calificacion</th>
+                                <th>Calificación</th>
                                 <th>Comentario</th>
-                                <th>Publicacion</th>
-                                <th>Aprovacion</th>
-                                <th>Accion</th>
+                                <th>Publicación</th>
+                                <th>Aprobación</th>
+                                <th>Editar</th>
+                                <th>Eliminar</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredResenas.map((resena) => (
                                 <tr key={resena.id_resena}>
-                                    <td >{resena.id_resena}</td>
+                                    <td>{resena.id_resena}</td>
                                     <td style={{ display: 'none' }}>{resena.id_cliente}</td>
-                                    <td>{resena.nombre1_cliente}</td> {/* Cambia a nombre1_cliente */}
+                                    <td>{resena.nombre1_cliente}</td>
                                     <td>{resena.apellido1_cliente}</td>
                                     <td style={{ display: 'none' }}>{resena.id_producto}</td>
                                     <td>{resena.nombre_producto}</td>
@@ -220,13 +280,15 @@ function ListaResena({ rol }) {
                                     <td>{resena.aprovacion}</td>
                                     <td>
                                         <Button variant="primary" onClick={() => openModal(resena)}><FaPencil /></Button>
+                                    </td>
+                                    <td>
                                         <Button variant="danger" onClick={() => handleDelete(resena.id_resena)}><FaTrashCan /></Button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
-
                     </Table>
+
                 </Card.Body>
             </Card>
 

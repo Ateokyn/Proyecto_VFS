@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';  // Importa las funciones us
 import { Row, Col, Container, Card, Badge, Form, FloatingLabel } from 'react-bootstrap';  // Importa componentes de react-bootstrap
 import Header from '../components/Header';  // Importa el componente Header desde su ubicación relativa
 import '../styles/App.css';  // Importa estilos CSS del archivo App.css
+import { FaComment, FaStar } from 'react-icons/fa';
 
 function Catalogo({ rol }) {  // Define un componente funcional Galeria que recibe props
 
@@ -15,14 +16,14 @@ function Catalogo({ rol }) {  // Define un componente funcional Galeria que reci
   const filteredProductos = productos.filter((producto) => {  // Filtra los productos según la cadena de búsqueda
     // Convierte a minúsculas los valores de los campos para realizar una búsqueda insensible a mayúsculas y minúsculas
     const id_producto = producto.id_producto;
-    const nombre_producto = producto.nombre_producto.toLowerCase(); 
+    const nombre_producto = producto.nombre_producto.toLowerCase();
     const cantidad = producto.cantidad;
     const precio_venta = producto.precio_venta;
     const genero = producto.genero.toLowerCase();
     const talla = producto.talla;
     const id_categoria = producto.id_categoria;
     const search = searchQuery.toLowerCase();
-    
+
     // Verifica si la cadena de búsqueda se encuentra en algún campo de los productos
     // Devuelve un nuevo array con los productos filtrados
     return (
@@ -46,56 +47,75 @@ function Catalogo({ rol }) {  // Define un componente funcional Galeria que reci
 
   return (
     <div>
-    <Header rol={rol} />
+      <Header rol={rol} />
 
-    <Container className="margen-contenedor">
+      <Container className="margen-contenedor">
 
-      <Row className="mb-3">
-        <Col sm="12" md="6" lg="12">
-          <FloatingLabel controlId="search" label="Buscar">
-            <Form.Control
-              type="text"
-              placeholder="Buscar"
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-          </FloatingLabel>
-        </Col>
-      </Row>
 
-      <Row className="g-3">
-        {filteredProductos.map((producto) => (
-          <Col sm="12" md="4" lg="3">
-            <Card className="h-60"> {/* Agrega la clase h-100 para que todas las tarjetas tengan la misma altura */}
-              <Card.Img
-                className="image-card"
-                variant="top"
-                src={producto.imagen}
-                alt={producto.nombre_nombre}
-                style={{ height: '250px' }}
+        <Row className="mb-3">
+          <Col sm="12" md="6" lg="12">
+            <FloatingLabel controlId="search" label="Buscar">
+              <Form.Control
+                type="text"
+                placeholder="Buscar"
+                value={searchQuery}
+                onChange={handleSearchChange}
               />
-              <Card.Body>
-                <Card.Title>{producto.nombre_producto}</Card.Title>
-                <Card.Text>
-                  <Badge bg="primary">Género: {producto.genero}</Badge>
-                </Card.Text>
-                <div>
-                  <Badge bg="primary">Stock: {producto.cantidad}</Badge>
-                  <Badge bg="success">Precio: {producto.precio_venta}</Badge>
-                  <Badge bg="warning" text="dark">
-                    Talla: {producto.talla}
-                  </Badge>
-                </div>
-              </Card.Body>
-              <Card.Body>
-                <Card.Link href="/producto">Comprar</Card.Link>
-              </Card.Body>
-            </Card>
+            </FloatingLabel>
           </Col>
-        ))}
-      </Row>
-    </Container>
-  </div>
+        </Row>
+
+        <Row className="g-3">
+          {filteredProductos.map((producto) => (
+            <Col sm="12" md="4" lg="3">
+              <Card className="h-60"> {/* Agrega la clase h-100 para que todas las tarjetas tengan la misma altura */}
+                <Card.Img
+                  className="image-card"
+                  variant="top"
+                  src={producto.imagen}
+                  alt={producto.nombre_nombre}
+                  style={{ height: '250px' }}
+                />
+                <Card.Body>
+                  <Card.Title>{producto.nombre_producto}</Card.Title>
+                  <Card.Text className="text-center" style={{ fontSize: '24px' }}>
+                    <Badge> C${producto.precio_venta}</Badge>
+                    <hr className="my-1 mx-auto" style={{ width: '70%' }} />
+                  </Card.Text>
+
+                  <div>
+                    <Badge bg="primary">Stock: {producto.cantidad}</Badge>
+                    <Badge bg="success">Género: {producto.genero}</Badge>
+                    <Badge bg="warning" text="dark">
+                      Talla: {producto.talla}
+                    </Badge>
+                  </div>
+                </Card.Body>
+
+                <Row>
+                  <Col>
+                    <Card.Body>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Card.Link href="/compra" style={{ display: 'inline-block', padding: '10px 20px', backgroundColor: '#007bff', color: '#fff', textDecoration: 'none', borderRadius: '5px', marginRight: '8px' }}>
+                          Comprar
+                        </Card.Link>
+                        <Card.Link href="/resena" style={{ marginRight: '8px' }}>
+                          <FaComment size={20} style={{ color: '#ff5733' }} />
+                        </Card.Link>
+                        <Card.Link href="/listadeseos">
+                          <FaStar size={20} style={{ color: '#f8d528' }} />
+                        </Card.Link>
+                      </div>
+                    </Card.Body>
+                  </Col>
+                </Row>
+
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    </div>
   );
 }
 

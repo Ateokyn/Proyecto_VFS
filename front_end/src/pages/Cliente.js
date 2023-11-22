@@ -54,7 +54,7 @@ function Cliente({ rol }) {
         setEmail_cliente('');
         setContrasena_cliente('');
       } else {
-        alert('Error al registrar el cliente');
+        alert('Por favor complete todos los campos antes de continuar.');
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -64,7 +64,7 @@ function Cliente({ rol }) {
 
   return (
     <div>
-      <Header rol={rol}/>
+      <Header rol={rol} />
 
       <Container>
         <Card className="margen-contenedor">
@@ -121,7 +121,7 @@ function Cliente({ rol }) {
                   <FloatingLabel controlId="fechanac_cliente" label="Fecha nacimiento">
                     <Form.Control
                       type="date"
-                      placeholder="Ingrese la fecha nacimiento"
+                      placeholder="Ingrese la fecha de nacimiento"
                       value={fechanac_cliente}
                       onChange={(e) => setFechanac_cliente(e.target.value)}
                     />
@@ -129,10 +129,10 @@ function Cliente({ rol }) {
                 </Col>
 
                 <Col sm="12" md="6" lg="6">
-                  <FloatingLabel controlId="telefono_cliente" label="Telefono">
+                  <FloatingLabel controlId="telefono_cliente" label="Teléfono">
                     <Form.Control
                       type="number"
-                      placeholder="Ingrese el numero de telefono"
+                      placeholder="Ingrese el número de teléfono"
                       value={telefono_cliente}
                       onChange={(e) => setTelefono_cliente(e.target.value)}
                     />
@@ -151,7 +151,7 @@ function Cliente({ rol }) {
                 </Col>
 
                 <Col sm="12" md="12" lg="12">
-                  <FloatingLabel controlId="contrasena_cliente" label="contraseña">
+                  <FloatingLabel controlId="contrasena_cliente" label="Contraseña">
                     <Form.Control
                       type="text"
                       placeholder="Ingrese la contraseña"
@@ -174,6 +174,7 @@ function Cliente({ rol }) {
 
     </div>
   );
+
 }
 
 export default Cliente;

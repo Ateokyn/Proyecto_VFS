@@ -54,7 +54,7 @@ function Cita({ rol }) {
                 setEstado_cita('');
                 setComentario('');
             } else {
-                alert('Error al registrar el producto');
+                alert('Por favor complete todos los campos antes de continuar.');
             }
         } catch (error) {
             console.error('Error en la solicitud:', error);
@@ -71,7 +71,7 @@ function Cita({ rol }) {
                 setId_clientes(data);
             })
             .catch(error => {
-                console.error('Error al obtener las especialidades', error);
+                console.error('Error al obtener la lista de clientes', error);
             });
     }, []);
 
@@ -84,13 +84,13 @@ function Cita({ rol }) {
                 setId_empleados(data);
             })
             .catch(error => {
-                console.error('Error al obtener las especialidades', error);
+                console.error('Error al obtener la lista de empleados', error);
             });
     }, []);
 
     return (
         <div>
-            <Header rol={rol}/>
+            <Header rol={rol} />
 
             <Container>
                 <Card className="margen-contenedor">
@@ -139,7 +139,6 @@ function Cita({ rol }) {
                                     </FloatingLabel>
                                 </Col>
 
-
                                 <Col sm="6" md="6" lg="6">
                                     <FloatingLabel controlId="tipo_servicio" label="Tipo servicio">
                                         <Form.Control
@@ -176,10 +175,10 @@ function Cita({ rol }) {
                                 <Col sm="6" md="6" lg="6">
                                     <FloatingLabel controlId="estado_cita" label="">
                                         <Form.Check
-                                            type="checkbox" // Cambiado a "checkbox" para un control de casilla de verificación
+                                            type="checkbox"
                                             label="Estado cita"
-                                            checked={estado_cita} // Asegúrate de que aprovacion sea un valor booleano
-                                            onChange={(e) => setEstado_cita(e.target.checked)} // Usar e.target.checked para establecer el valor booleano
+                                            checked={estado_cita}
+                                            onChange={(e) => setEstado_cita(e.target.checked)}
                                         />
                                     </FloatingLabel>
                                 </Col>
@@ -187,7 +186,7 @@ function Cita({ rol }) {
                                 <Col sm="6" md="6" lg="6">
                                     <FloatingLabel controlId="comentario" label="Comentario">
                                         <Form.Control
-                                            type="text" // Cambiado a "number" para capturar valores numéricos
+                                            type="text"
                                             placeholder="Ingrese su comentario"
                                             value={comentario}
                                             onChange={(e) => setComentario(e.target.value)}
@@ -205,9 +204,9 @@ function Cita({ rol }) {
                     </Card.Body>
                 </Card>
             </Container>
-
-        </div >
+        </div>
     );
+
 }
 
 export default Cita;
