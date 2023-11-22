@@ -423,8 +423,12 @@ router.post('/login', (req, res) => {
     const sql = `
     SELECT 
     c.id_cita,
+    ct.id_cliente,
     ct.nombre1_cliente,
+    ct.apellido1_cliente,
+    ed.id_empleado,
     ed.nombre1_empleado,
+    ed.apellido1_empleado,
     c.tipo_servicio,
     c.fecha_cita,
     c.hora_cita,

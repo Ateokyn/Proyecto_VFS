@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Form, Row, Col, Container, FloatingLabel, Card, Button } from 'react-bootstrap';
 import Header from '../components/Header';
 import '../styles/App.css';
+import ProveedorForm from '../pages/Proveedor'; // Importar el nuevo componente
 
 function Producto({ rol }) {
 
     const [id_categorias, setId_categorias] = useState([]); // Estado para almacenar las categorías
     const [id_categoria, setId_categoria] = useState(''); // Estado para el valor seleccionado de categoría
     const [id_proveedores, setId_proveedores] = useState([]); // Estado para almacenar los proveedores
-    const [id_proveedor, setId_proveedor] = useState(''); // Estado para el valor seleccionado de proveedor
+    const [id_proveedor, setId_proveedor] = useState('');
+    const [showModal, setShowModal] = useState(false);
 
     // Crear un estado para cada campo del formulario
     const [nombre_producto, setNombre_producto] = useState('');
@@ -83,34 +85,35 @@ function Producto({ rol }) {
     };
 
     useEffect(() => {
-        // Realiza una solicitud a tu ruta para obtener las especialidades
+        // Realiza una solicitud a tu ruta para obtener los proveedores
         fetch('http://localhost:5000/crud/read_proveedor')
             .then(response => response.json())
             .then(data => {
-                // Actualiza el estado con las especialidades obtenidas
+                // Actualiza el estado con los proveedores obtenidos
                 setId_proveedores(data);
             })
             .catch(error => {
-                console.error('Error al obtener las especialidades', error);
+                console.error('Error al obtener los proveedores', error);
             });
     }, []);
 
     useEffect(() => {
-        // Realiza una solicitud a tu ruta para obtener las especialidades
+        // Realiza una solicitud a tu ruta para obtener las categorías
         fetch('http://localhost:5000/crud/read_categoria')
             .then(response => response.json())
             .then(data => {
-                // Actualiza el estado con las especialidades obtenidas
+                // Actualiza el estado con las categorías obtenidas
                 setId_categorias(data);
             })
             .catch(error => {
-                console.error('Error al obtener las especialidades', error);
+                console.error('Error al obtener las categorías', error);
             });
     }, []);
 
+
     return (
         <div>
-            <Header rol={rol}/>
+            <Header rol={rol} />
 
             <Container>
                 <Card className="margen-contenedor">
@@ -137,9 +140,9 @@ function Producto({ rol }) {
                                 </Col>
 
                                 <Col sm="12" md="6" lg="4">
-                                    <FloatingLabel controlId="id_categoria" label="Categoria">
+                                    <FloatingLabel controlId="id_categoria" label="Categoría">
                                         <Form.Select
-                                            aria-label="Categoria"
+                                            aria-label="id_categoria"
                                             value={id_categoria}
                                             onChange={(e) => setId_categoria(e.target.value)}
                                         >
@@ -153,7 +156,6 @@ function Producto({ rol }) {
                                     </FloatingLabel>
                                 </Col>
 
-
                                 <Col sm="6" md="6" lg="6">
                                     <FloatingLabel controlId="nombre_producto" label="Producto">
                                         <Form.Control
@@ -166,7 +168,7 @@ function Producto({ rol }) {
                                 </Col>
 
                                 <Col sm="12" md="6" lg="6">
-                                    <Form.Group controlId="imagen" className="" >
+                                    <Form.Group controlId="imagen" className="">
                                         <Form.Control
                                             type="file"
                                             accept=".jpg, .png, .jpeg"
@@ -179,7 +181,7 @@ function Producto({ rol }) {
                                 <Col sm="6" md="6" lg="6">
                                     <FloatingLabel controlId="precio_venta" label="Precio venta">
                                         <Form.Control
-                                            type="number" // Cambiado a "number" para capturar valores numéricos
+                                            type="number"
                                             placeholder="Ingrese el precio de venta"
                                             value={precio_venta}
                                             onChange={(e) => setPrecio_venta(e.target.value)}
@@ -187,11 +189,10 @@ function Producto({ rol }) {
                                     </FloatingLabel>
                                 </Col>
 
-
                                 <Col sm="6" md="6" lg="6">
                                     <FloatingLabel controlId="precio_compra" label="Precio compra">
                                         <Form.Control
-                                            type="number" // Cambiado a "number" para capturar valores numéricos
+                                            type="number"
                                             placeholder="Ingrese el precio de compra"
                                             value={precio_compra}
                                             onChange={(e) => setPrecio_compra(e.target.value)}
@@ -202,7 +203,7 @@ function Producto({ rol }) {
                                 <Col sm="6" md="6" lg="6">
                                     <FloatingLabel controlId="cantidad" label="Cantidad">
                                         <Form.Control
-                                            type="number" // Cambiado a "number" para capturar valores numéricos
+                                            type="number"
                                             placeholder="Ingrese la cantidad"
                                             value={cantidad}
                                             onChange={(e) => setCantidad(e.target.value)}
@@ -210,7 +211,7 @@ function Producto({ rol }) {
                                     </FloatingLabel>
                                 </Col>
 
-                                <Col sm="12" md="12" lg="12">
+                                <Col sm="6" md="6" lg="6">
                                     <FloatingLabel controlId="talla" label="Talla">
                                         <Form.Control
                                             type="text"
@@ -229,8 +230,8 @@ function Producto({ rol }) {
                                             onChange={(e) => setGenero(e.target.value)}
                                         >
                                             <option>Seleccione el género</option>
-                                            <option value="F">F</option>
-                                            <option value="M">M</option>
+                                            <option value="F">Femenino</option>
+                                            <option value="M">Masculino</option>
                                         </Form.Select>
                                     </FloatingLabel>
                                 </Col>
@@ -245,9 +246,9 @@ function Producto({ rol }) {
                     </Card.Body>
                 </Card>
             </Container>
-
-        </div >
+        </div>
     );
+
 }
 
 export default Producto;

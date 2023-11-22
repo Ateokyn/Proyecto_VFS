@@ -72,7 +72,6 @@ function Cliente({ rol }) {
             <Card.Title>Registro de Cliente</Card.Title>
             <Form className="mt-3" onSubmit={handleSubmit}>
               <Row className="g-3">
-
                 <Col sm="6" md="6" lg="6">
                   <FloatingLabel controlId="nombre1_cliente" label="Primer Nombre">
                     <Form.Control
@@ -118,7 +117,7 @@ function Cliente({ rol }) {
                 </Col>
 
                 <Col sm="6" md="6" lg="6">
-                  <FloatingLabel controlId="fechanac_cliente" label="Fecha nacimiento">
+                  <FloatingLabel controlId="fechanac_cliente" label="Fecha de nacimiento">
                     <Form.Control
                       type="date"
                       placeholder="Ingrese la fecha de nacimiento"
@@ -140,20 +139,20 @@ function Cliente({ rol }) {
                 </Col>
 
                 <Col sm="12" md="6" lg="6">
-                  <FloatingLabel controlId="email_cliente" label="Email">
+                  <FloatingLabel controlId="email_cliente" label="Correo Electrónico">
                     <Form.Control
                       type="text"
-                      placeholder="Ingrese el email"
+                      placeholder="Ingrese el correo electrónico"
                       value={email_cliente}
                       onChange={(e) => setEmail_cliente(e.target.value)}
                     />
                   </FloatingLabel>
                 </Col>
 
-                <Col sm="12" md="12" lg="12">
+                <Col sm="12" md="6" lg="6">
                   <FloatingLabel controlId="contrasena_cliente" label="Contraseña">
                     <Form.Control
-                      type="text"
+                      type="password"
                       placeholder="Ingrese la contraseña"
                       value={contrasena_cliente}
                       onChange={(e) => setContrasena_cliente(e.target.value)}
@@ -171,9 +170,9 @@ function Cliente({ rol }) {
           </Card.Body>
         </Card>
       </Container>
-
     </div>
   );
+
 
 }
 

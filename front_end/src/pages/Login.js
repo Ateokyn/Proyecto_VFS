@@ -52,7 +52,7 @@ const Login = ({ setRol }) => {
         <Col md={12}>
           <Card>
             <Card.Body>
-              <Card.Title className="mb-3">Incio de Sesión</Card.Title>
+              <Card.Title className="mb-3">Inicio de Sesión</Card.Title>
               <Form onSubmit={handleSubmit}>
 
                 <Row>
@@ -108,6 +108,7 @@ const Login = ({ setRol }) => {
       </Row>
     </Container>
   );
+
 };
 
 export default Login;

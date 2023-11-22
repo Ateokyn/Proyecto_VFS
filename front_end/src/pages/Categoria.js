@@ -54,7 +54,6 @@ function Categoria({ rol }) {
                         <Card.Title>Registro de Categoría</Card.Title>
                         <Form className="mt-3" onSubmit={handleSubmit}>
                             <Row className="g-3">
-
                                 <Col sm="6" md="6" lg="6">
                                     <FloatingLabel controlId="nombre_categoria" label="Categoría">
                                         <Form.Control
@@ -76,8 +75,8 @@ function Categoria({ rol }) {
                                         />
                                     </FloatingLabel>
                                 </Col>
-
                             </Row>
+
                             <div className="center-button">
                                 <Button variant="primary" type="submit" className="mt-3" size="lg">
                                     Registrar

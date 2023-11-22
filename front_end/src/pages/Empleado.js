@@ -73,7 +73,6 @@ function Empleado({ rol }) {
                         <Card.Title>Registro de Empleado</Card.Title>
                         <Form className="mt-3" onSubmit={handleSubmit}>
                             <Row className="g-3">
-
                                 <Col sm="6" md="6" lg="6">
                                     <FloatingLabel controlId="nombre1_empleado" label="Primer Nombre">
                                         <Form.Control
@@ -151,7 +150,7 @@ function Empleado({ rol }) {
                                     </FloatingLabel>
                                 </Col>
 
-                                <Col sm="12" md="12" lg="12">
+                                <Col sm="12" md="6" lg="6">
                                     <FloatingLabel controlId="contrasena_empleado" label="Contraseña">
                                         <Form.Control
                                             type="password"
@@ -172,7 +171,6 @@ function Empleado({ rol }) {
                     </Card.Body>
                 </Card>
             </Container>
-
         </div>
     );
 

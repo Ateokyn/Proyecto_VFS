@@ -105,7 +105,7 @@ CREATE TABLE `Empleado` (
 	  `tipo_servicio` varchar(100) NOT NULL,
 	  `fecha_cita` date NOT NULL,
 	  `hora_cita` time NOT NULL,
-	  `estado_cita` boolean NOT NULL,
+	  `estado_cita` boolean NULL,
 	  `comentario` varchar(255) NULL
 	);
 

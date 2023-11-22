@@ -85,3 +85,30 @@
   text-align: center;
   padding: 20px;
 }
+
+.detalle-precio {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.detalle-precio-grande {
+  font-size: 34px; /* O ajusta el tamaño según tu preferencia */
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.punto-verde {
+  background-color: green;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.punto-rojo {
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
